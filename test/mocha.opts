@@ -1,0 +1,5 @@
+--recursive
+--require babel-register
+--require ./test/.env.js
+--require ./test/bootstrap.js
+--exit
