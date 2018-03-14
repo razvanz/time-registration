@@ -4,7 +4,7 @@ Web application facilitating time registration
 
 ## Prerequisites
 
-- [`docker`](https://www.docker.com/community-edition)
+- [docker](https://www.docker.com/community-edition)
 
 ## Usage
 
@@ -26,7 +26,7 @@ docker run -d \
 	time-registration:latest
 ```
 
-Navigate to [`http://localhost:3000`](http://localhost:3000) in preferred browser.
+Navigate to [http://localhost:3000](http://localhost:3000) in preferred browser.
 
 ### Remote
 
