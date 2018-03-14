@@ -1,0 +1,14 @@
+{
+  "E_INTERNAL": {
+    "code": "E_INTERNAL",
+    "name": "InternalError",
+    "message": "Internal server error",
+    "status_code": 500
+  },
+  "E_HTTP_NOT_FOUND": {
+    "code": "E_HTTP_NOT_FOUND",
+    "name": "NotFoundError",
+    "message": "No resource found at requested endpoint",
+    "status_code": 404
+  }
+}

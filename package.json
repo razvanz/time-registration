@@ -45,7 +45,14 @@
     "supertest": "^3.0.0"
   },
   "dependencies": {
+    "@razvanz/service-error": "^2.0.1",
+    "body-parser": "^1.18.2",
+    "bunyan": "^1.8.12",
+    "cors": "^2.8.4",
+    "express": "^4.16.3",
+    "express-request-id": "^1.4.0",
     "knex": "^0.14.4",
+    "lodash": "^4.17.5",
     "moment": "^2.21.0",
     "pg": "^7.4.1"
   }
