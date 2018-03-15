@@ -1,4 +1,5 @@
+export { default as authenticate } from './authenticate'
 export { default as errorHandler } from './error-handler'
 export { default as errorSerializer } from './error-serializer'
-export { default as handle404 } from './handle-404'
+export { default as handle404 } from './404-handler'
 export * from './http-logger'

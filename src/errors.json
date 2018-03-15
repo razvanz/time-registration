@@ -10,5 +10,71 @@
     "name": "NotFoundError",
     "message": "No resource found at requested endpoint",
     "status_code": 404
+  },
+  "E_ACCESS_DENIED": {
+    "code": "E_ACCESS_DENIED",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 400
+  },
+  "E_INSUFFICIENT_SCOPE": {
+    "code": "E_INSUFFICIENT_SCOPE",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 403
+  },
+  "E_INVALID_CLIENT": {
+    "code": "E_INVALID_CLIENT",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 400
+  },
+  "E_INVALID_GRANT": {
+    "code": "E_INVALID_GRANT",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 400
+  },
+  "E_INVALID_REQUEST": {
+    "code": "E_INVALID_REQUEST",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 400
+  },
+  "E_INVALID_SCOPE": {
+    "code": "E_INVALID_SCOPE",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 400
+  },
+  "E_INVALID_TOKEN": {
+    "code": "E_INVALID_TOKEN",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 401
+  },
+  "E_UNAUTHORIZED_CLIENT": {
+    "code": "E_UNAUTHORIZED_CLIENT",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 400
+  },
+  "E_UNAUTHORIZED_REQUEST": {
+    "code": "E_UNAUTHORIZED_REQUEST",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 401
+  },
+  "E_UNSUPPORTED_GRANT_TYPE": {
+    "code": "E_UNSUPPORTED_GRANT_TYPE",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 400
+  },
+  "E_UNSUPPORTED_RESPONSE_TYPE": {
+    "code": "E_UNSUPPORTED_RESPONSE_TYPE",
+    "name": "OAuthError",
+    "message": "%s",
+    "status_code": 400
   }
 }

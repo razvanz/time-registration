@@ -1,7 +1,7 @@
 import { Client } from 'pg'
 import knex from 'knex'
 
-const dbOptions = require('../../knexfile')
+const dbOptions = require('../knexfile')
 const { host, port, user, password, database } = dbOptions.connection
 const client = new Client({ host, port, user, password, database: 'postgres' })
 

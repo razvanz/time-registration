@@ -126,3 +126,6 @@ GitHub.sublime-settings
 ### Custom ###
 
 build
+
+# Environment configuration
+.env*

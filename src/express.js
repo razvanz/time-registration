@@ -12,7 +12,8 @@ import {
   errorSerializer,
   handlingLogger,
   handle404
-} from './middleware/'
+} from './middleware'
+import router from './router'
 
 const HOST = process.env.HTTP_HOST || '0.0.0.0'
 const PORT = process.env.HTTP_PORT || 80
@@ -36,8 +37,7 @@ server.use((req, res, next) => {
 server.use(handlingLogger())
 
 server.all('/health', (req, res) => { res.send('OK') }) // Health check
-// TODO Authentication
-// TODO Routers
+server.use(router)
 
 server.use(handle404())
 server.use(errorLogger())
