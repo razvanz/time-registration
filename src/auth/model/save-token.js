@@ -7,10 +7,10 @@ export async function saveToken (token, client, user) {
 
   const refreshToken = {
     id: token.refreshToken,
-    expiresAt: token.refreshTokenExpiresAt,
+    expires_at: token.refreshTokenExpiresAt,
     scope: token.scope,
-    clientId: client.id,
-    userId: user.id
+    client_id: client.id,
+    user_id: user.id
   }
 
   await refreshTokenDB.create(refreshToken)

@@ -13,8 +13,8 @@ export async function validateScope (user, client, scope) {
 
   if (!requestedScope) return authorizedScope
 
-  const authorizedScopeArr = `${authorizedScope}`.split(' ')
-  const requestedScopeArr = `${requestedScope}`.split(' ')
+  const authorizedScopeArr = `${authorizedScope}`.split(/\s/)
+  const requestedScopeArr = `${requestedScope}`.split(/\s/)
   const isScopeAuthorized = authorizedScopeArr.includes.bind(authorizedScopeArr)
 
   if (authorizedScopeArr.includes('admin')) return requestedScope

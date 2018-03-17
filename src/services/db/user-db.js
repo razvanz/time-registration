@@ -67,6 +67,6 @@ export default class UserDB extends ResourceDB {
   }
 
   async getScopes (id) {
-    return _.map(await this.userScopeDB.find({ userId: id }), 'scope').join(' ')
+    return _.map(await this.userScopeDB.find({ user_id: id }), 'scope').join(' ')
   }
 }

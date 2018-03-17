@@ -18,7 +18,7 @@ const OAUTH_ERROR_MAP = {
   unsupported_response_type: 'E_UNSUPPORTED_RESPONSE_TYPE'
 }
 
-module.exports = class OAuth2 {
+export default class AuthController {
   @asyncMiddlewareAutoNext
   static async token (req, res, next) {
     const request = new Request(req)

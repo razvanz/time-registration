@@ -1,7 +1,7 @@
 import { userDB } from '../../services/db'
 
 export async function getUserFromClient (client) {
-  if (!client.userId) return null
+  if (!client.user_id) return null
 
-  return userDB.get(client.userId)
+  return userDB.get(client.user_id)
 }

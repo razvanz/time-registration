@@ -11,7 +11,8 @@ import {
   errorLogger,
   errorSerializer,
   handlingLogger,
-  handle404
+  handle404,
+  snakeifyJsonResponse
 } from './middleware'
 import router from './router'
 
@@ -32,11 +33,14 @@ server.use((req, res, next) => {
   req.locals.createError = createError
   req.locals.logger = logger.with(req) // create a contextual logger
 
+  req.data = {} // Placeholder for contextual data
+
   next()
 })
 server.use(handlingLogger())
-
 server.all('/health', (req, res) => { res.send('OK') }) // Health check
+
+server.use(snakeifyJsonResponse())
 server.use(router)
 
 server.use(handle404())

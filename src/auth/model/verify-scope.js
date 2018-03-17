@@ -1,6 +1,6 @@
 export async function verifyScope (token, scope) {
-  const authorizedScopes = `${token.scope}`.split(' ')
-  const requestedScopes = `${scope}`.split(' ')
+  const authorizedScopes = `${token.scope}`.split(/\s/)
+  const requestedScopes = `${scope}`.split(/\s/)
   const isScopeAuthorized = authorizedScopes.includes.bind(authorizedScopes)
 
   if (!authorizedScopes || !authorizedScopes.length) return false

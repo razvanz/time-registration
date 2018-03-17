@@ -3,11 +3,11 @@ import { authorizationCodeDB } from '../../services/db'
 export async function saveAuthorizationCode (code, client, user) {
   const authorizationCode = {
     id: code.authorizationCode,
-    expiresAt: code.expiresAt,
-    redirectUri: code.redirectUri,
+    expires_at: code.expiresAt,
+    redirect_uri: code.redirectUri,
     scope: code.scope,
-    clientId: client.id,
-    userId: user.id
+    client_id: client.id,
+    user_id: user.id
   }
 
   await authorizationCodeDB.create(authorizationCode)

@@ -34,7 +34,7 @@ const clients = [{
   description: '',
   grants: 'password client_credentials refresh_token',
   redirect_uris: 'http://localhost:3000/callback',
-  userId: null
+  user_id: null
 }, {
   id: crypto.randomBytes(50).toString('base64').substr(0, 36),
   secret: crypto.randomBytes(128).toString('base64'),
@@ -42,15 +42,15 @@ const clients = [{
   description: '',
   grants: 'client_credentials',
   redirect_uris: 'http://localhost:3000/callback',
-  userId: users[1].id
+  user_id: users[1].id
 }]
 const userScopes = [{
   id: uuid(),
-  userId: users[0].id,
+  user_id: users[0].id,
   scope: 'manager'
 }, {
   id: uuid(),
-  userId: users[1].id,
+  user_id: users[1].id,
   scope: 'user'
 }]
 
@@ -95,18 +95,18 @@ describe('/oauth2/token', () => {
 
       it('returns 200', () => assert.equal(res.statusCode, 200))
       it('responds with accessToken', () => {
-        assert.property(res.body, 'accessToken')
-        assert.property(res.body, 'accessTokenExpiresAt')
+        assert.property(res.body, 'access_token')
+        assert.property(res.body, 'access_token_expires_at')
         assert.notEqual(
-          new Date(res.body.accessTokenExpiresAt).toString(),
+          new Date(res.body.access_token_expires_at).toString(),
           'Invalid Date'
         )
       })
       it('responds with refreshToken', () => {
-        assert.property(res.body, 'refreshToken')
-        assert.property(res.body, 'refreshToken')
+        assert.property(res.body, 'refresh_token')
+        assert.property(res.body, 'refresh_token_expires_at')
         assert.notEqual(
-          new Date(res.body.refreshTokenExpiresAt).toString(),
+          new Date(res.body.refresh_token_expires_at).toString(),
           'Invalid Date'
         )
       })
@@ -167,16 +167,16 @@ describe('/oauth2/token', () => {
   describe('refresh_token', () => {
     const refreshTokens = [{
       id: crypto.randomBytes(128).toString('base64'),
-      expiresAt: add1Day(new Date()),
+      expires_at: add1Day(new Date()),
       scope: 'manager',
-      clientId: clients[0].id,
-      userId: users[0].id
+      client_id: clients[0].id,
+      user_id: users[0].id
     }, {
       id: crypto.randomBytes(128).toString('base64'),
-      expiresAt: subtract1Day(new Date()),
+      expires_at: subtract1Day(new Date()),
       scope: 'admin',
-      clientId: clients[0].id,
-      userId: users[0].id
+      client_id: clients[0].id,
+      user_id: users[0].id
     }]
 
     describe('success', () => {
@@ -196,18 +196,18 @@ describe('/oauth2/token', () => {
 
       it('returns 200', () => assert.equal(res.statusCode, 200))
       it('responds with accessToken', () => {
-        assert.property(res.body, 'accessToken')
-        assert.property(res.body, 'accessTokenExpiresAt')
+        assert.property(res.body, 'access_token')
+        assert.property(res.body, 'access_token_expires_at')
         assert.notEqual(
-          new Date(res.body.accessTokenExpiresAt).toString(),
+          new Date(res.body.access_token_expires_at).toString(),
           'Invalid Date'
         )
       })
       it('responds with new refreshToken', () => {
-        assert.property(res.body, 'refreshToken')
-        assert.property(res.body, 'refreshToken')
+        assert.property(res.body, 'refresh_token')
+        assert.property(res.body, 'refresh_token_expires_at')
         assert.notEqual(
-          new Date(res.body.refreshTokenExpiresAt).toString(),
+          new Date(res.body.refresh_token_expires_at).toString(),
           'Invalid Date'
         )
       })
@@ -249,7 +249,7 @@ describe('/oauth2/token', () => {
 
       it('returns 200', () => assert.equal(res.statusCode, 200))
       it('returns refresh token scope', async () => {
-        const { accessToken, scope } = res.body
+        const { access_token: accessToken, scope } = res.body
         const { scope: tokenScope } = await jwt.decode(accessToken)
         assert.equal(tokenScope, refreshTokens[0].scope)
         assert.equal(scope, refreshTokens[0].scope)
@@ -314,10 +314,10 @@ describe('/oauth2/token', () => {
 
       it('returns 200', () => assert.equal(res.statusCode, 200))
       it('responds with accessToken', () => {
-        assert.property(res.body, 'accessToken')
-        assert.property(res.body, 'accessTokenExpiresAt')
+        assert.property(res.body, 'access_token')
+        assert.property(res.body, 'access_token_expires_at')
         assert.notEqual(
-          new Date(res.body.accessTokenExpiresAt).toString(),
+          new Date(res.body.access_token_expires_at).toString(),
           'Invalid Date'
         )
       })
@@ -334,7 +334,7 @@ describe('/oauth2/token', () => {
         description: '',
         grants: 'client_credentials',
         redirect_uris: 'http://localhost:3000/cb',
-        userId: null
+        user_id: null
       }
 
       before(async () => {
