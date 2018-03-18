@@ -1,5 +1,8 @@
 import _ from 'lodash'
+import zxcvbn from 'zxcvbn'
 import assert from 'assert'
+
+const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
 
 export default function validator (trutly, message) {
   assert(trutly, message)
@@ -12,13 +15,25 @@ export function equal (comparator, value, message) {
 export function is (type, value, message) {
   switch (type) {
     case 'number':
-      return isNumber(value, message)
+      isNumber(value, message)
+      return
     case 'string':
-      return isString(value, message)
+      isString(value, message)
+      return
     case 'date':
-      return isDate(value, message)
+      isDate(value, message)
+      return
     case 'object':
-      return isObject(value, message)
+      isObject(value, message)
+      return
+    case 'email':
+      isString(value, message)
+      isEmail(value, message)
+      return
+    case 'password':
+      isString(value, message)
+      isPassword(value, message)
+      return
     default:
       throw new Error(`No validator available for type "${type}"`)
   }
@@ -38,6 +53,17 @@ export function isDate (value, message) {
 
 export function isObject (value, message) {
   assert(_.isPlainObject(value), message)
+}
+
+export function isEmail (value, message) {
+  assert(EMAIL_REGEXP.test(`${value}`.toLowerCase()), message)
+}
+
+export function isPassword (value) {
+  const { score, feedback: { warning, suggestions } } = zxcvbn(value)
+  const message = `${warning}\n${suggestions.join('\n')}`
+
+  assert(score > 1, message)
 }
 
 export function property (obj, prop, message) {

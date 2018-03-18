@@ -1,10 +1,18 @@
 export default class UtilsController {
-  static handleValidationErrors (err, req, res, next) {
-    const { logger, createError } = req.locals
+  static handleErrors (err, req, res, next) {
+    const { createError } = req.locals
 
+    // Validation errors
     if (err.code === 'ERR_ASSERTION') {
-      logger.error({ type: 'validation-error' }, err)
       return next(createError('E_HTTP_BAD_REQUEST', err, err.message))
+    }
+
+    // Postgresql errors (https://www.postgresql.org/docs/9.6/static/errcodes-appendix.html)
+    if (err.code === '23505') { // unique constraint
+      return next(createError('E_HTTP_CONFLICT', err, err.detail))
+    }
+    if (err.code === '23503') { // foreign key constraint
+      return next(createError('E_HTTP_BAD_REQUEST', err, err.detail))
     }
 
     return next(err)

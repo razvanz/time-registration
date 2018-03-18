@@ -19,7 +19,11 @@ export default function validate (schemaConfig) {
         `Supported properties are: "${_.keys(schemaConfig).join('", "')}"`)
 
       _.forEach(schemaConfig, (config, prop) => {
-        if (config.required) {
+        const required = typeof config.required === 'function'
+          ? config.required(req)
+          : config.required
+
+        if (required) {
           validator.equal(!!body[prop], true, `Missing required property "${prop}"`)
         } else if (!body[prop]) {
           return
