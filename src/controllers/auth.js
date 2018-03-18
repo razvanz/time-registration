@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import asyncMiddlewareAutoNext from '../../lib/async-middleware-auto-next'
+import { asyncMiddlewareAutoNext } from './decorators'
 import { default as oAuth2, Request, Response, errors as oAuthErrors } from '../auth'
 
 const OAUTH_ERROR_MAP = {

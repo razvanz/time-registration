@@ -1,4 +1,4 @@
-module.exports = function asyncMiddlewareAutoNext (target, key, descriptor) {
+export default function asyncMiddlewareAutoNext (target, key, descriptor) {
   let { value } = descriptor
 
   descriptor.value = (req, res, next) =>

@@ -25,7 +25,7 @@ export default class UserDB extends ResourceDB {
   async get (id) {
     return {
       ...(await super.get(id)),
-      scope: this.getScopes(id)
+      scope: await this.getScopes(id)
     }
   }
 

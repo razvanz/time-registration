@@ -14,9 +14,7 @@ class ExpressServerError extends ServiceError {
   serialize () {
     return {
       code: this.code,
-      message: this.message,
-      raw_message: this.raw_message,
-      raw_data: this.raw_data
+      message: this.message
     }
   }
 }

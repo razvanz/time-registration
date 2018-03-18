@@ -6,6 +6,7 @@ import { resolve as pathResolve } from 'path'
 import ExpressServerError from './express-server-error'
 import errors from './errors'
 import logger from './services/logger'
+import * as validator from './services/validator'
 import {
   errorHandler,
   errorLogger,
@@ -31,6 +32,7 @@ server.use(bodyParser.json({ type: (req) => req.is(['*/json', '*/*+json']) }))
 server.use((req, res, next) => {
   req.locals = req.app.locals
   req.locals.createError = createError
+  req.locals.validator = validator
   req.locals.logger = logger.with(req) // create a contextual logger
 
   req.data = {} // Placeholder for contextual data

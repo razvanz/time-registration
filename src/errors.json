@@ -5,6 +5,12 @@
     "message": "Internal server error",
     "status_code": 500
   },
+  "E_HTTP_BAD_REQUEST": {
+    "code": "E_HTTP_BAD_REQUEST",
+    "name": "BadRequestError",
+    "message": "%s",
+    "status_code": 400
+  },
   "E_HTTP_NOT_FOUND": {
     "code": "E_HTTP_NOT_FOUND",
     "name": "NotFoundError",
