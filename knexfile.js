@@ -1,10 +1,4 @@
 const url = require('url')
-const moment = require('moment')
-const types = require('pg').types
-
-const PG_TIMESTAMP_OID = 1114
-const timestampParser = val => val === null ? null : moment.utc(val).toISOString()
-types.setTypeParser(PG_TIMESTAMP_OID, timestampParser)
 
 if (!process.env.DB_URL) {
   throw new Error(`Invalid value "${process.env.DB_URL}" for env variable DB_URL`)

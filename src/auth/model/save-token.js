@@ -8,7 +8,7 @@ export async function saveToken (token, client, user) {
   const refreshToken = {
     id: token.refreshToken,
     expires_at: token.refreshTokenExpiresAt,
-    scope: token.scope,
+    scope: `${token.scope}`.split(' '),
     client_id: client.id,
     user_id: user.id
   }

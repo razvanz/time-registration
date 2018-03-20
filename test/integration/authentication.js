@@ -5,8 +5,7 @@ import * as jwt from '../../src/services/jwt'
 import {
   clientDB,
   refreshTokenDB,
-  userDB,
-  userScopeDB
+  userDB
 } from '../../src/services/db'
 import {
   add1Day,
@@ -20,38 +19,31 @@ const users = [{
   id: uuid(),
   name: 'Test user 1',
   email: 'email1@test.client',
-  password: 'secret password 1'
+  password: 'secret password 1',
+  scope: ['manager']
 }, {
   id: uuid(),
   name: 'Test user 2',
   email: 'email2@test.client',
-  password: 'secret password 2'
+  password: 'secret password 2',
+  scope: ['user']
 }]
 const clients = [{
   id: crypto.randomBytes(50).toString('base64').substr(0, 36),
   secret: crypto.randomBytes(128).toString('base64'),
   name: 'Test client',
   description: '',
-  grants: 'password client_credentials refresh_token',
-  redirect_uris: 'http://localhost:3000/callback',
+  grants: ['password', 'client_credentials', 'refresh_token'],
+  redirect_uris: ['http://localhost:3000/callback'],
   user_id: null
 }, {
   id: crypto.randomBytes(50).toString('base64').substr(0, 36),
   secret: crypto.randomBytes(128).toString('base64'),
   name: 'Test client',
   description: '',
-  grants: 'client_credentials',
-  redirect_uris: 'http://localhost:3000/callback',
+  grants: ['client_credentials'],
+  redirect_uris: ['http://localhost:3000/callback'],
   user_id: users[1].id
-}]
-const userScopes = [{
-  id: uuid(),
-  user_id: users[0].id,
-  scope: 'manager'
-}, {
-  id: uuid(),
-  user_id: users[1].id,
-  scope: 'user'
 }]
 
 describe('/oauth2/token', () => {
@@ -60,14 +52,12 @@ describe('/oauth2/token', () => {
   before(async () => {
     await clientDB.create(...clients)
     await userDB.create(...users)
-    await userScopeDB.create(...userScopes)
   })
 
   after(async () => {
     await clientDB.delete('id', 'is not', null)
     await refreshTokenDB.delete('id', 'is not', null)
     await userDB.delete('id', 'is not', null)
-    await userScopeDB.delete('id', 'is not', null)
   })
 
   describe('unsupported grant', () => {
@@ -168,13 +158,13 @@ describe('/oauth2/token', () => {
     const refreshTokens = [{
       id: crypto.randomBytes(128).toString('base64'),
       expires_at: add1Day(new Date()),
-      scope: 'manager',
+      scope: ['manager'],
       client_id: clients[0].id,
       user_id: users[0].id
     }, {
       id: crypto.randomBytes(128).toString('base64'),
       expires_at: subtract1Day(new Date()),
-      scope: 'admin',
+      scope: ['admin'],
       client_id: clients[0].id,
       user_id: users[0].id
     }]
@@ -332,8 +322,8 @@ describe('/oauth2/token', () => {
         secret: crypto.randomBytes(128).toString('base64'),
         name: 'Client without user',
         description: '',
-        grants: 'client_credentials',
-        redirect_uris: 'http://localhost:3000/cb',
+        grants: ['client_credentials'],
+        redirect_uris: ['http://localhost:3000/cb'],
         user_id: null
       }
 

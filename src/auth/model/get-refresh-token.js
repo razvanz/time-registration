@@ -10,12 +10,10 @@ export async function getRefreshToken (refreshToken) {
 
   return {
     refreshToken: data.id,
-    refreshTokenExpiresAt: data.expires_at,
-    scope: data.scope,
+    refreshTokenExpiresAt: new Date(data.expires_at),
+    scope: (data.scope || []).join(' '),
     client: {
       ...client,
-      grants: `${client.grants}`.split(/\s/),
-      redirectUris: `${client.redirect_uris}`.split(/\s/),
       userId: client.userId
     },
     user

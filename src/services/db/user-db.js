@@ -16,19 +16,6 @@ const isValidPassword = (password, passwordHash) => {
 }
 
 export default class UserDB extends ResourceDB {
-  constructor (db, tableName, userScopeDB) {
-    super(db, tableName)
-
-    this.userScopeDB = userScopeDB
-  }
-
-  async get (id) {
-    return {
-      ...(await super.get(id)),
-      scope: await this.getScopes(id)
-    }
-  }
-
   async create (...values) {
     values = await Promise.all(_.map(values, async v => {
       const salt = await genRandomString(20, 'base64')
@@ -60,13 +47,6 @@ export default class UserDB extends ResourceDB {
 
     if (!user || !await isValidPassword(password, user.password)) return null
 
-    return {
-      ...user,
-      scope: await this.getScopes(user.id)
-    }
-  }
-
-  async getScopes (id) {
-    return _.map(await this.userScopeDB.find({ user_id: id }), 'scope').join(' ')
+    return user
   }
 }

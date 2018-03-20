@@ -24,6 +24,10 @@ before(function () {
     .then(() => client.query(createSQL))
     .then(() => knex(dbOptions).migrate.latest())
     .then(() => {
+      const { default: db } = require('../src/services/db')
+      return db.init()
+    })
+    .then(() => {
       process.stdout.write('Done\n')
       process.stdout.write(`DB: ${process.env.DB_URL}\n\n`)
     })

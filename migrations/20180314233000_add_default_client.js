@@ -3,8 +3,8 @@ const WEB_CLIENT = {
   secret: 'O90q3A8SSIQ3ZNItgxI4T90xVJp8NREm8ENpAczOyDHhjkh8Lg4jhAI2yyh91mtM',
   name: 'WebApplication',
   description: 'Time registration web application client',
-  grants: 'password refresh_token',
-  redirect_uris: '',
+  grants: ['password', 'refresh_token'],
+  redirect_uris: [],
   user_id: null
 }
 
