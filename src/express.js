@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser'
 import cors from 'cors'
+import consolidate from 'consolidate'
 import express from 'express'
 import requestId from 'express-request-id'
 import { resolve as pathResolve } from 'path'
@@ -22,9 +23,16 @@ const PORT = process.env.HTTP_PORT || 80
 const server = express()
 const createError = ExpressServerError.factory(errors || {})
 
+server.locals.title = 'Time registration'
+server.locals.description = 'Time registration system'
 server.disable('x-powered-by')
 server.set('trust proxy', true)
-server.use(express.static(pathResolve(__dirname, './public')))
+
+server.engine('html', consolidate.swig) // Set swig as the template engine
+server.set('view engine', 'html')
+server.set('views', 'build/views')
+server.use(express.static(pathResolve(__dirname, '../build/assets/')))
+
 server.use(cors())
 server.use(requestId({ attributeName: 'requestId', setHeader: true }))
 server.use(bodyParser.urlencoded({ extended: true }))
@@ -41,6 +49,7 @@ server.use((req, res, next) => {
 })
 server.use(handlingLogger())
 server.all('/health', (req, res) => { res.send('OK') }) // Health check
+server.get('/', (req, res) => res.render('index'))
 
 server.use(snakeifyJsonResponse())
 server.use(router)

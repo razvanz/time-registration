@@ -34,6 +34,9 @@ export function is (type, value, message) {
       isString(value, message)
       isPassword(value, message)
       return
+    case 'array':
+      isArray(value, message)
+      return
     default:
       throw new Error(`No validator available for type "${type}"`)
   }
@@ -64,6 +67,10 @@ export function isPassword (value) {
   const message = `${warning}\n${suggestions.join('\n')}`
 
   assert(score > 1, message)
+}
+
+export function isArray (value, message) {
+  assert(Array.isArray(value), message)
 }
 
 export function property (obj, prop, message) {

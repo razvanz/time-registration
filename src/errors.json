@@ -7,19 +7,25 @@
   },
   "E_HTTP_BAD_REQUEST": {
     "code": "E_HTTP_BAD_REQUEST",
-    "name": "BadRequestError",
+    "name": "HttpError",
     "message": "%s",
     "status_code": 400
   },
+  "E_HTTP_FORBIDDEN": {
+    "code": "E_HTTP_FORBIDDEN",
+    "name": "HttpError",
+    "message": "You don't have the neccessary authorization to perform this action.",
+    "status_code": 403
+  },
   "E_HTTP_NOT_FOUND": {
     "code": "E_HTTP_NOT_FOUND",
-    "name": "NotFoundError",
+    "name": "HttpError",
     "message": "No resource found at requested endpoint",
     "status_code": 404
   },
   "E_HTTP_CONFLICT": {
     "code": "E_HTTP_CONFLICT",
-    "name": "ConflictError",
+    "name": "HttpError",
     "message": "%s",
     "status_code": 409
   },
@@ -28,12 +34,6 @@
     "name": "OAuthError",
     "message": "%s",
     "status_code": 400
-  },
-  "E_INSUFFICIENT_SCOPE": {
-    "code": "E_INSUFFICIENT_SCOPE",
-    "name": "OAuthError",
-    "message": "%s",
-    "status_code": 403
   },
   "E_INVALID_CLIENT": {
     "code": "E_INVALID_CLIENT",

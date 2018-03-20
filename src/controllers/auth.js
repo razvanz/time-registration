@@ -6,7 +6,7 @@ const OAUTH_ERROR_MAP = {
   server_error: 'E_INTERNAL',
   invalid_argument: 'E_INVALID_ARGUMENT',
   access_denied: 'E_ACCESS_DENIED',
-  insufficient_scope: 'E_INSUFFICIENT_SCOPE',
+  insufficient_scope: 'E_HTTP_FORBIDDEN',
   invalid_client: 'E_INVALID_CLIENT',
   invalid_grant: 'E_INVALID_GRANT',
   invalid_request: 'E_INVALID_REQUEST',

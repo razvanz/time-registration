@@ -30,10 +30,11 @@ function handleExit (code) {
 
 // ;(async () => {
 //   const uuid = require('uuid')
+//   const userDB = require('./services/db').userDB
 //   const SUPERUSER = {
 //     id: uuid(),
 //     name: 'Super User',
-//     email: 'su@timeregistration.com',
+//     email: 'su@tr.com',
 //     password: process.env.SUPERUSER_PASSWORD,
 //     scope: ['user', 'manager', 'admin']
 //   }

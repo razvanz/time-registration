@@ -42,13 +42,8 @@ export default function validate (schemaConfig) {
             `"${prop}" value must be no longer than ${config.max_length}`)
         }
 
-        if (typeof config.value === 'function') {
-          const expected = config.value(req)
-          validator.equal(body[prop], expected,
-            `"${prop}" value must be equal to "${expected}"`)
-        } else if (config.value !== undefined) {
-          validator.equal(body[prop], config.value,
-            `"${prop}" value must be equal to "${config.value}"`)
+        if (config.validate && typeof config.validate === 'function') {
+          validator.equal(config.validate(req), true, `Invalid value for "${prop}"`)
         }
       })
 

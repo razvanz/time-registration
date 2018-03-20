@@ -13,10 +13,10 @@ export function errorSerializer (error) {
 export function reqSerializer (req) {
   const {
     id: requestId,
-    method, protocol, hostname, url,
+    method, protocol, url,
     headers, body, query
   } = req
-  const endpoint = protocol + '://' + hostname + url
+  const endpoint = `${protocol}://${headers.host}${url}`
 
   return {
     requestId: requestId,
@@ -31,8 +31,8 @@ export function reqSerializer (req) {
 
 export function resSerializer (res) {
   const { req, statusCode, _headers: headers } = res
-  const { id: requestId, protocol, hostname, url, method } = req
-  const endpoint = protocol + '://' + hostname + url
+  const { id: requestId, protocol, url, method, headers: reqHeaders } = req
+  const endpoint = `${protocol}://${reqHeaders.host}${url}`
 
   return {
     requestId: requestId,

@@ -1,0 +1,18 @@
+.view {
+  display: block;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+#login.view, #register.view {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

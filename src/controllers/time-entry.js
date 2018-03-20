@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import { timeEntryDB } from '../services/db'
 import {
   applyFilterQuery,
@@ -16,7 +15,7 @@ export const TIME_ENTRY_SCHEMA = {
     min_length: 36,
     max_length: 36,
     required: false,
-    value: _.partialRight(_.get, 'params.id')
+    validate: (val, req) => val === req.params.id
   },
   user_id: {
     type: 'string',
@@ -65,7 +64,7 @@ export const TIME_ENTRY_SORT_CONFIG = {
 export default class TimeEntryController {
   @asyncMiddlewareAutoNext
   @buildReadQuery(timeEntryDB)
-  @limitProxyReadForNonAdmin
+  @limitProxyReadToAdmin
   static async load (req, res) {
     const { createError } = req.locals
     const { queryBuilder: query } = req
@@ -78,7 +77,7 @@ export default class TimeEntryController {
 
   @asyncMiddlewareAutoNext
   @buildReadQuery(timeEntryDB)
-  @limitProxyReadForNonAdmin
+  @limitProxyReadToAdmin
   @applyFilterQuery(TIME_ENTRY_FILTER_CONFIG)
   @applySortQuery(TIME_ENTRY_SORT_CONFIG)
   @applyPaginationQuery
@@ -96,7 +95,7 @@ export default class TimeEntryController {
 
   @asyncMiddlewareAutoNext
   @validate(TIME_ENTRY_SCHEMA)
-  @limitProxyWriteForNonAdmin
+  @limitProxyWriteToAdmin
   @assignId
   static async create (req, res) {
     const { body } = req
@@ -108,7 +107,7 @@ export default class TimeEntryController {
 
   @asyncMiddlewareAutoNext
   @validate(TIME_ENTRY_SCHEMA)
-  @limitProxyWriteForNonAdmin
+  @limitProxyWriteToAdmin
   static async update (req, res) {
     const { body, params } = req
     const value = { ...body, ...params }
@@ -127,7 +126,7 @@ export default class TimeEntryController {
   }
 }
 
-export function limitProxyReadForNonAdmin (target, key, descriptor) {
+export function limitProxyReadToAdmin (target, key, descriptor) {
   let { value } = descriptor
 
   descriptor.value = (req, res, next) => {
@@ -145,20 +144,20 @@ export function limitProxyReadForNonAdmin (target, key, descriptor) {
   return descriptor
 }
 
-export function limitProxyWriteForNonAdmin (target, key, descriptor) {
+export function limitProxyWriteToAdmin (target, key, descriptor) {
   let { value } = descriptor
 
   descriptor.value = (req, res, next) => {
     const {
-      locals: { validator },
+      locals: { createError },
       user,
       body
     } = req
     const userScope = `${user.scope}`.split(/\s/)
 
-    if (!userScope.includes('admin')) {
-      // limit non-admin users only their entries
-      validator.equal(body.user_id, user.id, `"user_id" must match the value of your own user id.`)
+    // limit non-admin users only their entries
+    if (!userScope.includes('admin') && body.user_id !== user.id) {
+      throw createError('E_HTTP_FORBIDDEN')
     }
 
     return value(req, res, next)

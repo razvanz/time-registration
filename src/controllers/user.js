@@ -10,13 +10,14 @@ import {
   validate
 } from './decorators'
 
+const SCOPES = ['user', 'manager', 'admin']
 export const USER_SCHEMA = {
   id: {
     type: 'string',
     min_length: 36,
     max_length: 36,
     required: false,
-    value: _.partialRight(_.get, 'params.id')
+    validate: (val, req) => val === req.params.id
   },
   name: {
     type: 'string',
@@ -33,6 +34,11 @@ export const USER_SCHEMA = {
   password: {
     type: 'password',
     required: (req) => ['POST'].includes(`${req.method}`.toUpperCase())
+  },
+  scope: {
+    type: 'array',
+    required: false,
+    validate: (val) => !_.size(_.difference(val || [], SCOPES))
   }
 }
 export const USER_FILTER_CONFIG = {
@@ -84,10 +90,14 @@ export default class UserController {
 
   @asyncMiddlewareAutoNext
   @validate(USER_SCHEMA)
+  @limitAuthzWrite
   @assignId
   static async create (req, res) {
-    const { body } = req
-    const [id] = await userDB.create(body)
+    const { body: user } = req
+    // ensure scope is correct
+    user.scope = ensureScopeHierarchy(user.scope)
+
+    const [id] = await userDB.create(user)
 
     res.set('Location', `${req.url.replace(/\/$/, '')}/${id}`)
     res.status(201).json({ id })
@@ -95,12 +105,17 @@ export default class UserController {
 
   @asyncMiddlewareAutoNext
   @validate(USER_SCHEMA)
+  @limitAuthzWrite
   @hidePasswordInResponse
   static async update (req, res) {
-    const { body, params } = req
+    const { body, params, data: { user } } = req
     const value = { ...body, ...params }
 
+    // ensure scope is correct
+    value.scope = value.scope ? ensureScopeHierarchy(value.scope) : user.scope
+
     await userDB.update(params, value)
+
     res.json({
       ...req.data.user,
       ...value
@@ -133,6 +148,32 @@ export function limitProxyReadToManager (target, key, descriptor) {
   return descriptor
 }
 
+export function limitAuthzWrite (target, key, descriptor) {
+  let { value } = descriptor
+
+  descriptor.value = (req, res, next) => {
+    const {
+      locals: { createError },
+      user, body
+    } = req
+    const userScope = `${(user && user.scope) || ''}`.split(/\s/)
+
+    // limit admin users to change a user's admin status
+    if (!userScope.includes('admin') && (body.scope || []).includes('admin')) {
+      throw createError('E_HTTP_FORBIDDEN')
+    }
+
+    // limit manageres to change a user's manager status
+    if (!userScope.includes('manager') && (body.scope || []).includes('manager')) {
+      throw createError('E_HTTP_FORBIDDEN')
+    }
+
+    return value(req, res, next)
+  }
+
+  return descriptor
+}
+
 export function hidePasswordInResponse (target, key, descriptor) {
   let { value } = descriptor
 
@@ -152,4 +193,13 @@ export function hidePasswordInResponse (target, key, descriptor) {
   }
 
   return descriptor
+}
+
+function ensureScopeHierarchy (scope) {
+  // ensure scope is correct
+  scope = scope || ['user']
+  scope = scope.includes('admin') ? _.union(scope, ['manager']) : scope
+  scope = scope.includes('manager') ? _.union(scope, ['user']) : scope
+
+  return scope
 }

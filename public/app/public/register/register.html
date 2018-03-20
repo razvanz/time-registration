@@ -1,0 +1,33 @@
+<div id="register" class="view">
+    <form id="register-form" name="vm.form" ng-submit="vm.register()" class="col-lg-3 col-md-4 col-sm-8 col-xs-12">
+      <fieldset>
+        <legend>REGISTER</legend>
+        <div ng-show="vm.error" class="form-group has-error">
+          <span id="helpBlock" class="help-block">{{vm.error}}</span>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': vm.form.name.$dirty && vm.form.name.$invalid }">
+          <label for="name-input">Name</label>
+          <input type="text" name="name" class="form-control" id="name-input" placeholder="Name" tabindex="1" autofocus ng-model="vm.user.name" required="true" ng-minlength="1" ng-maxlength="128">
+          <span id="help-password-required" class="help-block" ng-show="vm.form.name.$dirty && vm.form.name.$error.required">Please enter your name</span>
+          <span id="help-password-required" class="help-block" ng-show="vm.form.name.$dirty && (vm.form.name.$error.minLength || vm.form.name.$error.maxLength)">Plese enter a name between 1 - 128 characters in length</span>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': vm.form.email.$dirty && vm.form.email.$invalid }">
+          <label for="email-input">Email</label>
+          <input type="email" name="email" class="form-control" id="email-input" placeholder="Email" tabindex="2" ng-model="vm.user.email" required="true">
+          <span id="help-password-required" class="help-block" ng-show="vm.form.email.$dirty && vm.form.email.$error.required">Please enter your email</span>
+          <span id="help-password-required" class="help-block" ng-show="vm.form.email.$dirty && (vm.form.email.$error.minLength || vm.form.email.$error.maxLength)">Plese enter an email between 5 - 256 characters in length</span>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': vm.form.password.$dirty && vm.form.password.$invalid }">
+          <label for="password-input">Password</label>
+          <input type="password" name="password" class="form-control" id="password-input" placeholder="Password" tabindex="3" ng-model="vm.user.password" required="true">
+          <span id="help-password-required" class="help-block" ng-show="vm.form.password.$dirty && vm.form.password.$error.required">Please enter a password</span>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <button type="submit" class="btn btn-success pull-right" tabindex="4">Register</button>
+            <a ui-sref="login" class="" tabindex="5">Click here to login</a>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+</div>

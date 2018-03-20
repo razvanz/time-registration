@@ -1,0 +1,27 @@
+<div id="login" class="view">
+    <form id="login-form" name="vm.form" ng-submit="vm.login()" class="col-lg-3 col-md-4 col-sm-8 col-xs-12">
+      <fieldset>
+        <legend>LOGIN</legend>
+        <div ng-show="vm.error" class="form-group has-error">
+          <span id="helpBlock" class="help-block">{{vm.error}}</span>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': vm.form.username.$dirty && vm.form.username.$invalid }">
+          <label for="email-input">Email</label>
+          <input type="email" name="email" class="form-control" id="email-input" placeholder="Email" tabindex="1" autofocus ng-model="vm.credentials.username" required="true">
+          <span id="help-password-required" class="help-block" ng-show="vm.form.username.$dirty && vm.form.username.$error.required">Please enter your email</span>
+          <span id="help-password-required" class="help-block" ng-show="vm.form.username.$dirty && vm.form.username.$error.email">Invalid email</span>
+        </div>
+        <div class="form-group" ng-class="{ 'has-error': vm.form.password.$dirty && vm.form.password.$invalid }">
+          <label for="password-input">Password</label>
+          <input type="password" name="password" class="form-control" id="password-input" placeholder="Password" tabindex="2" ng-model="vm.credentials.password" required="true">
+          <span id="help-password-required" class="help-block" ng-show="vm.form.password.$dirty && vm.form.password.$error.required">Please enter your password</span>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <button type="submit" class="btn btn-success pull-right" tabindex="3">Login</button>
+            <a ui-sref="register" class="" tabindex="4">Click here to register</a>
+          </div>
+        </div>
+      </fieldset>
+    </form>
+</div>
