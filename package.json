@@ -15,7 +15,7 @@
     "clean": "rm -rf build/ && mkdir build",
     "prebuild": "npm run clean",
     "build:templates": "node_modules/.bin/nghtml2js -m 'tr.templates' -s browserify --whitespace space -p public/app/ -f 'public/app/**/*.html' -o public/app/templates.js",
-    "build:js": "node_modules/.bin/browserify public/app/index.js -t [ babelify --no-comments --compact=false --presets [ env ] --plugins [ transform-es2015-modules-commonjs ] ] -o build/assets/bundle.js",
+    "build:js": "node_modules/.bin/browserify -r babel-polyfill -r jquery public/app/index.js -o build/assets/bundle.js",
     "build:sass": "node_modules/.bin/node-sass public/sass/bundle.scss > build/assets/bundle.css && node_modules/.bin/postcss --use autoprefixer --autoprefixer.browsers 'last 2 versions' -r build/assets/bundle.css",
     "build:html": "rsync -av public/views build/",
     "build:fonts": "cp -r node_modules/font-awesome/fonts build/assets && cp -r node_modules/bootstrap-sass/assets/fonts/bootstrap/ build/assets/fonts",
@@ -55,6 +55,7 @@
     "babel-preset-env": "^1.6.1",
     "babelify": "^8.0.0",
     "browserify": "^16.1.1",
+    "browserify-shim": "^3.8.14",
     "chai": "^4.1.2",
     "chokidar-cli": "^1.2.0",
     "eslint": "^4.18.2",
@@ -73,6 +74,10 @@
     "@razvanz/service-error": "^2.0.1",
     "@uirouter/angularjs": "^1.0.15",
     "angular": "^1.6.9",
+    "angular-animate": "^1.6.9",
+    "angular-debounce": "^1.1.0",
+    "angular-toastr": "^2.1.1",
+    "angular-touch": "^1.6.9",
     "angular-ui-bootstrap": "^2.5.6",
     "body-parser": "^1.18.2",
     "bootstrap-sass": "^3.3.7",
@@ -82,6 +87,7 @@
     "express": "^4.16.3",
     "express-request-id": "^1.4.0",
     "font-awesome": "^4.7.0",
+    "jquery": "^3.3.1",
     "jsonwebtoken": "^8.2.0",
     "knex": "^0.14.4",
     "lodash": "^4.17.5",
@@ -94,5 +100,19 @@
     "swig-templates": "^2.0.2",
     "uuid": "^3.2.1",
     "zxcvbn": "^4.4.2"
+  },
+  "browserify": {
+    "transform": [
+      [
+        "babelify", {
+          "comments": false,
+          "plugins": ["transform-es2015-modules-commonjs"],
+          "presets": ["env"]
+        }
+      ]
+    ]
+  },
+  "browserify-shim": {
+    "jquery": "$"
   }
 }

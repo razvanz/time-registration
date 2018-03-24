@@ -79,11 +79,18 @@ export default class TimeEntryController {
   @buildReadQuery(timeEntryDB)
   @limitProxyReadToAdmin
   @applyFilterQuery(TIME_ENTRY_FILTER_CONFIG)
-  @applySortQuery(TIME_ENTRY_SORT_CONFIG)
   @applyPaginationQuery
+  @applySortQuery(TIME_ENTRY_SORT_CONFIG)
   static async list (req, res) {
+    console.log(req.queryBuilder.toString())
     const timeEntries = await req.queryBuilder
 
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        res.json(timeEntries)
+        resolve()
+      }, 2000)
+    })
     // TODO Respond with timeEntries based on content type (export)
     res.json(timeEntries)
   }

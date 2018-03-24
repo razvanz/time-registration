@@ -1,4 +1,4 @@
-function RegisterCtrl ($state, $http, OAuth2) {
+function RegisterCtrl ($state, DEFAULT_STATE, $http, OAuth2) {
   this.user = { name: '', email: '', password: '', scope: ['user'] }
   this.error = ''
 
@@ -8,7 +8,7 @@ function RegisterCtrl ($state, $http, OAuth2) {
     $http.post('/user', user)
       .then(() => OAuth2.authenticate({ username: user.email, password: user.password }))
       .then(() => {
-        $state.go('index')
+        $state.go(DEFAULT_STATE)
       })
       .catch(error => {
         if (error.status === 409) this.error = 'Email address already in use.'
@@ -18,6 +18,6 @@ function RegisterCtrl ($state, $http, OAuth2) {
   }
 }
 
-RegisterCtrl.$inject = ['$state', '$http', 'OAuth2']
+RegisterCtrl.$inject = ['$state', 'DEFAULT_STATE', '$http', 'OAuth2']
 
 export default RegisterCtrl

@@ -17,12 +17,17 @@ function errorInterceptor ($q, $log) {
       return config
     },
     responseError: (res) => {
+      $log.debug('http:serializer:error', res)
+
       if (!res) {
         res = {
           status: 500,
           headers: () => 'application/json',
           data: {}
         }
+      } else if (res instanceof Error) {
+        // retrying in an error interceptor will have already gone through the interceptors flow
+        return $q.reject(res)
       }
 
       // Check content type
@@ -32,19 +37,11 @@ function errorInterceptor ($q, $log) {
         return $q.reject(error)
       }
 
-      const error = new Error(res.data.message || 'Internal error')
+      const error = new Error(res.data.message || 'Internal server error')
       error.code = res.data.code || 'E_INTERNAL'
       error.status = res.status || 500
+      error.requestId = res.headers('x-request-id')
 
-      switch (error.code) {
-        case 'E_INVALID_GRANT':
-          error.message = 'Session has expired. Please login to continue.'
-          break
-        default:
-          break
-      }
-
-      $log.error(error)
       return $q.reject(error)
     }
   }

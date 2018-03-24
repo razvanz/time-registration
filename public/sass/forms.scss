@@ -1,0 +1,32 @@
+.form-control {
+  &.clean-form-control {
+    box-shadow: none;
+    border-bottom-width: 1px;
+    border-top-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-radius: 0px;
+  }
+}
+
+#new-entry-form, #filters-form {
+  margin-top: 10px !important;
+  margin-bottom: 10px !important;
+}
+
+@media (min-width: $screen-sm-min) {
+  #new-entry-form {
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+
+  #new-entry-form, #filters-form {
+    &.collapse {
+      display: block !important;
+    }
+  }
+
+  .control-label {
+    font-size: 18px;
+  }
+}

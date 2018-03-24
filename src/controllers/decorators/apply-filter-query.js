@@ -18,7 +18,11 @@ export default function applyFilterQuery (filterConfig) {
         if (typeof val === 'string') val = { '=': val }
 
         _.forEach(val, (val, operator) => {
-          validator.is(type, val, `"${prop}" filter value must be a ${type}`)
+          if (Array.isArray(val)) {
+            _.forEach(val, v => validator.is(type, v, `"${prop}" filter value must be a ${type}`))
+          } else {
+            validator.is(type, val, `"${prop}" filter value must be a ${type}`)
+          }
           validator.includes(operators, `${operator}`.toLowerCase(),
             `Unsupported operator "${operator}" for ` +
             `"${prop}" filter. Supported operators are "${operators.join('", "')}".`)

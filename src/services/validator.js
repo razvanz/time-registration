@@ -17,6 +17,9 @@ export function is (type, value, message) {
     case 'number':
       isNumber(value, message)
       return
+    case 'integer':
+      isInteger(value, message)
+      return
     case 'string':
       isString(value, message)
       return
@@ -44,6 +47,10 @@ export function is (type, value, message) {
 
 export function isNumber (value, message) {
   assert(!isNaN(value), message)
+}
+
+export function isInteger (value, message) {
+  assert(!isNaN(value) && (value % 1 === 0), message)
 }
 
 export function isString (value, message) {
@@ -82,13 +89,13 @@ export function notProperty (obj, prop, message) {
 }
 
 export function greaterThan (than, value, message) {
-  if (!than) throw new Error(`Invalid comparator value "${than}"`)
+  if (than === undefined || than === null) throw new Error(`Invalid comparator value "${than}"`)
 
   assert(value >= than, message)
 }
 
 export function lessThan (than, value, message) {
-  if (!than) throw new Error(`Invalid comparator value "${than}"`)
+  if (than === undefined || than === null) throw new Error(`Invalid comparator value "${than}"`)
 
   assert(value <= than, message)
 }

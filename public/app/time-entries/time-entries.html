@@ -1,0 +1,162 @@
+<div id="time-entries-view" class="view" tr-infinite-scroll="vm.loadMoreData()" tr-infinite-scroll-debounce="1000" tr-infinite-scroll-coeficient="0.95">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="new-entry">
+                  <h4 class="text-center visible-xs">Book new entry</h4>
+                  <form id="new-entry-form" class="form-inline" name="vm.form" ng-init="vm.resetNewEntry()" ng-submit="vm.create(vm.newEntry)" uib-collapse="!newEntryFormVisible">
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <div class="form-group visible-lg-inline visible-md-inline visible-sm-inline">
+                          <label class="control-label">Book </label>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': vm.form.duration.$dirty && vm.form.duration.$error.required}">
+                          <input type="number" name="duration" class="form-control clean-form-control" id="new-entry-duration" placeholder="eg: 5" required="true" min="0.5" max="24" step="0.5" ng-model="vm.newEntry.end_ts" ng-model-options="{ allowInvalid: true }" tr-model-iso-date tr-model-hours-from="vm.newEntry.start_ts">
+                          <label for="new-entry-duration" class="control-label"> hour(s) </label>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': vm.form.date.$dirty && vm.form.date.$invalid}">
+                          <label for="new-entry-date" class="control-label"> on </label>
+                          <input type="date" name="date" class="form-control clean-form-control" id="new-entry-date" placeholder="eg: {{vm.today | date:'dd-MM-yyyy'}}" required="true" ng-model="vm.newEntry.start_ts" tr-model-iso-date>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': vm.form.description.$dirty && vm.form.description.$invalid}">
+                          <label for="new-entry-description" class="control-label"> for </label>
+                          <input type="text" name="description" class="form-control clean-form-control" id="new-entry-description" placeholder="eg: frontend work" ng-model="vm.newEntry.description">
+                          <label class="control-label visible-sm-inline visible-md-inline visible-lg-inline">.</label>
+                        </div>
+                        <div ng-if="vm.form.$dirty && vm.form.$error.required" class="form-group has-error visible-xs">
+                          <span id="new-entry-error-help-xs" class="help-block">Please fill in all the required fields.</span>
+                        </div>
+                        <button type="submit" class="btn btn-success col-md-1 col-sm-2 col-xs-12 pull-right" ng-disabled="vm.form.$error.required">
+                          <i class="fa fa-check"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <div ng-if="vm.form.$dirty && vm.form.$error.required" class="form-group has-error visible-sm visible-md visible-lg">
+                      <span id="new-entry-error-help-lg" class="help-block">Please fill in all the required fields.</span>
+                    </div>
+                  </form>
+                  <button type="button" class="btn btn-default col-xs-12 visible-xs" ng-click="newEntryFormVisible = !newEntryFormVisible">
+                    <i class="fa fa" ng-class="{'fa-angle-double-down': !newEntryFormVisible, 'fa-angle-double-up': newEntryFormVisible}"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <hr/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="row">
+              <div class="col-xs-12">
+                <h4 class="text-center visible-xs">Filter between</h4>
+                <div class="time-entries-filters">
+                  <form id="filters-form" class="form-inline" name="vm.filtersForm" uib-collapse="!filtersFormVisible">
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <div class="form-group visible-lg-inline visible-md-inline visible-sm-inline">
+                          <label class="control-label">Filter between </label>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': vm.filtersForm.from.$dirty && vm.filtersForm.from.$error}">
+                          <input type="date" name="from" class="form-control clean-form-control" id="filters-from" required="true" ng-model="vm.filters.from" ng-model-options="{ updateOn: 'blur', debounce: 1000 }" tr-model-iso-date>
+                        </div>
+                        <div class="form-group text-center">
+                          <label class="control-label"> - </label>
+                        </div>
+                        <div class="form-group" ng-class="{'has-error': vm.filtersForm.from.$dirty && vm.filtersForm.from.$error}">
+                          <input type="date" name="to" class="form-control clean-form-control" id="filters-to" required="true" ng-model="vm.filters.to" ng-model-options="{ updateOn: 'blur', debounce: 1000 }" tr-model-iso-date>
+                        </div>
+                        <button type="button" class="btn btn-default col-md-1 col-sm-2 col-xs-12 pull-right"><i class="fa fa-file"></i> Export</button>
+                      </div>
+                    </div>
+                  </form>
+                  <button type="button" class="btn btn-default col-xs-12 visible-xs" ng-click="filtersFormVisible = !filtersFormVisible">
+                    <i class="fa fa" ng-class="{'fa-angle-double-down': !filtersFormVisible, 'fa-angle-double-up': filtersFormVisible}"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <hr/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="time-entry-list">
+              <div class="row" ng-repeat="(day, entries) in (vm.dataSvc.data | orderBy:'start_ts':true | groupByDay:'start_ts')">
+                <div class="col-xs-12">
+                  <h5 ng-click="vm.loadMoreData()"> {{ day | date:'yyyy-MM-dd' }}</h5>
+                  <div class="well time-entry-list-day-box">
+                    <div class="time-entry"
+                         ng-click="entryDetailsVisible=!entryDetailsVisible"
+                         ng-repeat="entry in entries | orderBy:'start_ts':true"
+                         ng-class="{ 'bg-success': !entry.user.preferedHours || (entry.end_ts | duration:entry.start_ts:'hours') >= entry.user.preferedHours, 'bg-danger': (entry.end_ts | duration:entry.start_ts:'hours') < entry.user.preferedHours }">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <div class="time-entry-body">
+
+                            <div class="time-entry-summary" ng-init="editMode=false">
+                              <div class="time-entry-description">
+                                <form id="entry-form-{{$index + 1}}" class="form-inline" name="entryForms[{{$index + 1}}]">
+                                  <div ng-if="vm.user.scope.includes('admin')">
+                                    <span ng-if="!editMode">
+                                      <strong>{{entry.user.name}}</strong>
+                                    </span>
+                                    <!-- <div ng-if="editMode" class="form-group">
+                                      <input type="text" class="form-control" name="user_id" ng-model="entry.user_id" placeholder="Search for users" uib-typeahead="user.id as user.name for users in searchUsers($viewValue)">
+                                    </div> -->
+                                    <span> - </span>
+                                  </span>
+                                  <span>
+                                    <strong>{{(entry.end_ts | duration:entry.start_ts:'hours')}}</strong>
+                                    <span> hours </span>
+                                    <!-- <span> for "{{entry.description}}"</span> -->
+                                  </span>
+                                </form>
+                              </div>
+
+                              <div class="time-entry-actions">
+                                <ul class="nav">
+                                  <li>
+                                    <a href class="time-entry-action" ng-click="$event.stopPropagation(); !editMode ? (editMode = !editMode) : vm.updateEntry(entry)">
+                                      <i class="fa" ng-class="{'fa-edit': !editMode, 'fa-check text-success': editMode}"></i>
+                                    </a>
+                                  </li>
+                                  <li>
+                                    <a href class="time-entry-action text-danger" ng-click="$event.stopPropagation(); !editMode ? vm.dataSvc.delete(entry.id, true) :  (editMode = !editMode)">
+                                      <i class="fa" ng-class="{'fa-trash': !editMode, 'fa-times': editMode}"></i>
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
+
+                            </div>
+
+                            <div class="time-entry-details" uib-collapse="!entryDetailsVisible">
+                              {{entry.description}}
+                              {{entry.description}}
+                              {{entry.description}}
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center" ng-show="vm.isLoadingMore">
+              <i class="fa fa-spinner fa-spin fa-2x"></i>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

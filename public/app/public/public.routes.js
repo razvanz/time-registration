@@ -8,7 +8,7 @@ function route ($stateProvider) {
       controller: 'LoginCtrl',
       params: {
         e: { value: '', squash: true },
-        redirect: { value: 'index', object: true }
+        redirect: { value: '' }
       },
       resolve: {
         user: ['$q', 'OAuth2', ($q, OAuth2) => {

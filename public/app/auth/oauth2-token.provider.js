@@ -16,16 +16,20 @@ function OAuth2TokenProvider () {
     return config
   }
 
-  this.$get = function ($localStorage) {
+  this.$get = function ($localStorage, $sessionStorage) {
     class OAuth2Token {
       setToken (data) {
-        $localStorage[config.name] = data
+        $sessionStorage[config.name] = data.access_token
+        $localStorage[config.name] = data.refresh_token
 
         return data
       }
 
       getToken () {
-        return $localStorage[config.name]
+        return {
+          access_token: $sessionStorage[config.name],
+          refresh_token: $localStorage[config.name]
+        }
       }
 
       getAuthorizationHeader () {
@@ -37,14 +41,15 @@ function OAuth2TokenProvider () {
       }
 
       removeToken () {
-        return delete $localStorage[config.name]
+        delete $localStorage[config.name]
+        delete $sessionStorage[config.name]
       }
     }
 
     return new OAuth2Token()
   }
 
-  this.$get.$inject = ['$localStorage']
+  this.$get.$inject = ['$localStorage', '$sessionStorage']
 }
 
 export default OAuth2TokenProvider

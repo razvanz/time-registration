@@ -42,6 +42,11 @@ export const USER_SCHEMA = {
   }
 }
 export const USER_FILTER_CONFIG = {
+  id: {
+    type: 'string',
+    operators: ['=', 'in'],
+    case_insensitive: false
+  },
   name: {
     type: 'string',
     operators: ['=', 'like'],
@@ -73,8 +78,8 @@ export default class UserController {
   @buildReadQuery(userDB)
   @limitProxyReadToManager
   @applyFilterQuery(USER_FILTER_CONFIG)
-  @applySortQuery(USER_SORT_CONFIG)
   @applyPaginationQuery
+  @applySortQuery(USER_SORT_CONFIG)
   @hidePasswordInResponse
   static async list (req, res) {
     const users = await req.queryBuilder

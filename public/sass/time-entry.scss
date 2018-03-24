@@ -1,0 +1,63 @@
+.time-entry-list {
+  padding-bottom: 100px;
+
+  .time-entry-list-day-box{
+    padding: 15px;
+  }
+
+  .time-entry:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.time-entry {
+  margin: 0;
+  padding: 5px 15px;
+  border-radius: 4px;
+
+  .time-entry-body {
+    display: flex;
+    flex-flow: column;
+
+    .time-entry-summary {
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      align-items: center;
+      justify-content: space-between;
+
+      .time-entry-description {
+        flex-grow: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .time-entry-actions {
+        flex-grow: 0;
+      }
+    }
+  }
+}
+
+.time-entry-actions {
+  ul.nav {
+    display: flex;
+    flex-flow: row;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-end;
+
+    li {
+      flex-grow: 0;
+
+      .time-entry-action {
+        padding: 5px 5px;
+
+        &:hover {
+          background-color: transparent !important;
+        }
+      }
+    }
+  }
+}
