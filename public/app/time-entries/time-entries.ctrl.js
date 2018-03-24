@@ -1,14 +1,7 @@
-import _ from 'lodash'
 import moment from 'moment'
 
 function TimeEntriesCtrl ($timeout, TimeEntriesDataSvc, toastr, timeEntries, user) {
   const today = new Date().toISOString()
-  const newEntry = {
-    user_id: user.id,
-    start_ts: today,
-    end_ts: moment(today).add(8, 'hours').toISOString(), // user prefered hours
-    description: ''
-  }
 
   this.dataSvc = TimeEntriesDataSvc
   this.user = user
@@ -19,7 +12,12 @@ function TimeEntriesCtrl ($timeout, TimeEntriesDataSvc, toastr, timeEntries, use
   }
 
   this.resetNewEntry = () => {
-    this.newEntry = _.cloneDeep(newEntry)
+    this.newEntry = {
+      user_id: user.id,
+      start_ts: today,
+      end_ts: moment(today).add(user.preferred_hours || 8, 'hours').toISOString(),
+      description: ''
+    }
   }
 
   this.create = (entry) => {

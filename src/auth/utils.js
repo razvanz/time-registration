@@ -7,7 +7,8 @@ const INCLUDE_CLIENT_PROPERTIES = [
 const INCLUDE_USER_PROPERTIES = [
   'id',
   'name',
-  'email'
+  'email',
+  'preferred_hours'
 ]
 
 export const serializeClient = obj => _.pick(obj, INCLUDE_CLIENT_PROPERTIES)

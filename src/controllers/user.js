@@ -35,6 +35,11 @@ export const USER_SCHEMA = {
     type: 'password',
     required: (req) => ['POST'].includes(`${req.method}`.toUpperCase())
   },
+  preferred_hours: {
+    type: 'integer',
+    required: false,
+    validate: (val) => val >= 0 && val <= 24
+  },
   scope: {
     type: 'array',
     required: false,

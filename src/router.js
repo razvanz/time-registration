@@ -12,7 +12,7 @@ router.route('/oauth2/token').post(AuthController.token)
 
 // Ueers
 router.route('/user')
-  .get(authenticate('manager'), UserController.list)
+  .get(authenticate('user'), UserController.list)
   .post(UserController.create)
 
 router.use('/user/:id', authenticate('user'), UserController.load)

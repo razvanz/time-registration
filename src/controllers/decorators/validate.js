@@ -43,7 +43,7 @@ export default function validate (schemaConfig) {
         }
 
         if (config.validate && typeof config.validate === 'function') {
-          validator.equal(config.validate(req), true, `Invalid value for "${prop}"`)
+          validator.equal(config.validate(body[prop], req), true, `Invalid value for "${prop}"`)
         }
       })
 

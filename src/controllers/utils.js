@@ -15,6 +15,10 @@ export default class UtilsController {
       return next(createError('E_HTTP_BAD_REQUEST', err, err.detail))
     }
 
+    if (err.code === '23514') { // check constraint
+      return next(createError('E_HTTP_BAD_REQUEST', err, err.detail))
+    }
+
     return next(err)
   }
 }

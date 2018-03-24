@@ -1,4 +1,4 @@
-<div id="time-entries-view" class="view" tr-infinite-scroll="vm.loadMoreData()" tr-infinite-scroll-debounce="1000" tr-infinite-scroll-coeficient="0.95">
+<div id="time-entries-view" class="view" tr-infinite-scroll="vm.loadMoreData()" tr-infinite-scroll-coeficient="0.95">
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
@@ -94,7 +94,7 @@
                     <div class="time-entry"
                          ng-click="entryDetailsVisible=!entryDetailsVisible"
                          ng-repeat="entry in entries | orderBy:'start_ts':true"
-                         ng-class="{ 'bg-success': !entry.user.preferedHours || (entry.end_ts | duration:entry.start_ts:'hours') >= entry.user.preferedHours, 'bg-danger': (entry.end_ts | duration:entry.start_ts:'hours') < entry.user.preferedHours }">
+                         ng-class="{ 'bg-success': !entry.user.preferred_hours || (entry.end_ts | duration:entry.start_ts:'hours') >= entry.user.preferred_hours, 'bg-danger': (entry.end_ts | duration:entry.start_ts:'hours') < entry.user.preferred_hours }">
                       <div class="row">
                         <div class="col-xs-12">
                           <div class="time-entry-body">
@@ -102,20 +102,20 @@
                             <div class="time-entry-summary" ng-init="editMode=false">
                               <div class="time-entry-description">
                                 <form id="entry-form-{{$index + 1}}" class="form-inline" name="entryForms[{{$index + 1}}]">
-                                  <div ng-if="vm.user.scope.includes('admin')">
-                                    <span ng-if="!editMode">
+                                  <div>
+                                    <span ng-if="vm.user.scope.includes('admin')">
                                       <strong>{{entry.user.name}}</strong>
+                                      <span> - </span>
                                     </span>
-                                    <!-- <div ng-if="editMode" class="form-group">
-                                      <input type="text" class="form-control" name="user_id" ng-model="entry.user_id" placeholder="Search for users" uib-typeahead="user.id as user.name for users in searchUsers($viewValue)">
-                                    </div> -->
-                                    <span> - </span>
-                                  </span>
-                                  <span>
-                                    <strong>{{(entry.end_ts | duration:entry.start_ts:'hours')}}</strong>
-                                    <span> hours </span>
-                                    <!-- <span> for "{{entry.description}}"</span> -->
-                                  </span>
+                                      <!-- <div ng-if="editMode" class="form-group">
+                                        <input type="text" class="form-control" name="user_id" ng-model="entry.user_id" placeholder="Search for users" uib-typeahead="user.id as user.name for users in searchUsers($viewValue)">
+                                      </div> -->
+                                    <span>
+                                      <strong>{{(entry.end_ts | duration:entry.start_ts:'hours')}}</strong>
+                                      <span> hours </span>
+                                      <!-- <span> for "{{entry.description}}"</span> -->
+                                    </span>
+                                  </div>
                                 </form>
                               </div>
 
@@ -149,9 +149,9 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="text-center" ng-show="vm.isLoadingMore">
-              <i class="fa fa-spinner fa-spin fa-2x"></i>
+              <div class="text-center" ng-show="vm.isLoadingMore">
+                <i class="fa fa-spinner fa-spin fa-2x"></i>
+              </div>
             </div>
           </div>
         </div>
