@@ -12,8 +12,7 @@ function factory ($q, $http, UsersDataSvc) {
     list (query, saveState, returnRaw) {
       query = query || { from: '', to: '' }
       query.offset = query.offset || 0
-      // query.size = query.size || 100
-      query.size = query.size || 5
+      query.size = query.size || 100
 
       const params = {
         sort: {
@@ -49,8 +48,8 @@ function factory ($q, $http, UsersDataSvc) {
         .then(populateUser)
         .then(res => {
           if (saveState) {
+            this.query = { ...query, total: parseInt(res.headers('x-pagination-total'), 10) }
             this.data = res.data
-            this.query = query
           }
 
           return returnRaw ? res : res.data
@@ -85,10 +84,22 @@ function factory ($q, $http, UsersDataSvc) {
     create (data, saveState) {
       return $http.post(`/time-entry`, data)
         .then(res => this.load(res.data.id))
-        .then(user => {
-          if (saveState) this.data.unshift(user)
+        .then(entry => {
+          if (saveState) this.data.unshift(entry)
 
-          return user
+          return entry
+        })
+    }
+
+    update (id, data, saveState) {
+      return $http.put(`/time-entry/${id}`, data)
+        .then(res => this.load(res.data.id))
+        .then(entry => {
+          if (saveState) {
+            this.data.splice(_.findIndex(this.data, { id: entry.id }), 1, entry)
+          }
+
+          return entry
         })
     }
 

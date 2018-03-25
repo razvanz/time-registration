@@ -23,9 +23,25 @@ function modelHoursFrom () {
 
         return moment(scope.from).add(parseFloat(val), 'hours').toDate()
       }
+      const minValidator = val => ctrl.$isEmpty(val) ||
+        moment(val).diff(moment(scope.from), 'hours', true) >= parseFloat(attrs.min)
+      const maxValidator = val => ctrl.$isEmpty(val) ||
+        moment(val).diff(moment(scope.from), 'hours', true) <= parseFloat(attrs.max)
+      const stepValidator = val => ctrl.$isEmpty(val) ||
+        moment(val).diff(moment(scope.from), 'hours', true) % parseFloat(attrs.step) === 0
 
       ctrl.$formatters.push(format)
       ctrl.$parsers.push(parse)
+
+      if (ctrl.$validators.min) {
+        ctrl.$validators.min = minValidator
+      }
+      if (ctrl.$validators.max) {
+        ctrl.$validators.max = maxValidator
+      }
+      if (ctrl.$validators.step) {
+        ctrl.$validators.step = stepValidator
+      }
 
       scope.$watch('from', function (newVal) {
         const val = ctrl.$viewValue

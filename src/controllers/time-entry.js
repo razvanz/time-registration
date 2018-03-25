@@ -1,4 +1,6 @@
+import _ from 'lodash'
 import { timeEntryDB } from '../services/db'
+import * as validator from '../services/validator'
 import {
   applyFilterQuery,
   applyPaginationQuery,
@@ -32,10 +34,10 @@ export const TIME_ENTRY_SCHEMA = {
     required: true
   },
   description: {
-    type: 'string',
-    min_length: 0,
-    max_length: 5000,
-    required: false
+    type: 'array',
+    required: false,
+    validate: (val) => _.every(val, v =>
+      !validator.is('string', v) && !validator.between(1, 256, v.length))
   }
 }
 export const TIME_ENTRY_FILTER_CONFIG = {
@@ -85,12 +87,12 @@ export default class TimeEntryController {
     console.log(req.queryBuilder.toString())
     const timeEntries = await req.queryBuilder
 
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        res.json(timeEntries)
-        resolve()
-      }, 2000)
-    })
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     res.json(timeEntries)
+    //     resolve()
+    //   }, 2000)
+    // })
     // TODO Respond with timeEntries based on content type (export)
     res.json(timeEntries)
   }

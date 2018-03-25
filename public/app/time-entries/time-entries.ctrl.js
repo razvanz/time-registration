@@ -1,30 +1,94 @@
+import _ from 'lodash'
 import moment from 'moment'
 
-function TimeEntriesCtrl ($timeout, TimeEntriesDataSvc, toastr, timeEntries, user) {
-  const today = new Date().toISOString()
+function TimeEntriesCtrl (
+  $scope,
+  $timeout,
+  $state,
+  $stateParams,
+  TimeEntriesDataSvc,
+  UsersDataSvc,
+  toastr,
+  timeEntries,
+  user
+) {
+  const today = moment().toISOString()
 
-  this.dataSvc = TimeEntriesDataSvc
-  this.user = user
   this.today = today
+  this.user = user
+  this.dataSvc = TimeEntriesDataSvc
+  this.userMap = {} // build by $scope.$watchCollection
   this.filters = {
-    from: null,
-    to: null
+    from: ($stateParams.from && moment($stateParams.from).toISOString()),
+    to: ($stateParams.to && moment($stateParams.to).toISOString())
   }
+  // utils
+  this.editMode = {}
+  this.clone = _.cloneDeep
 
   this.resetNewEntry = () => {
     this.newEntry = {
+      user: _.cloneDeep(user),
       user_id: user.id,
       start_ts: today,
       end_ts: moment(today).add(user.preferred_hours || 8, 'hours').toISOString(),
-      description: ''
+      description: []
     }
   }
 
+  this.searchUsers = (str) => {
+    console.log('searchUsers ', str)
+    return UsersDataSvc.list({ name: str })
+      .then((data) => {
+        console.log('found users: ', data)
+        return data
+      })
+  }
+
+  /************************************************************************************************
+   * Filtering
+   ***********************************************************************************************/
+
+  this.applyFilters = (filters) => {
+    const reverse = moment.utc(filters.from).isAfter(moment.utc(filters.to))
+    const params = {
+      ...$stateParams,
+      from: moment(reverse ? filters.to : filters.from)
+        .add(moment().utcOffset(), 'minutes') // Fix UI-Router assumes local date
+        .toISOString(),
+      to: moment(reverse ? filters.from : filters.to)
+        .endOf('day')
+        .add(moment().utcOffset(), 'minutes') // Fix UI-Router assumes local date
+        .toISOString()
+    }
+
+    $state.go($state.current.name, params)
+  }
+
+  /************************************************************************************************
+   * Data actions
+   ***********************************************************************************************/
+
+  this.loadMoreData = () => {
+    if (this.isLoadingMore) return
+
+    this.isLoadingMore = true
+    this.dataSvc.listMore()
+      .finally(() => { this.isLoadingMore = false })
+  }
+
   this.create = (entry) => {
-    this.dataSvc.create(entry, true)
-      .then(() => this.resetNewEntry())
+    const data = _.pick(entry, ['user_id', 'start_ts', 'end_ts', 'description'])
+
+    this.dataSvc.create(data, true)
+      .then(() => {
+        this.resetNewEntry()
+        toastr.success('The new entry has been successfully booked!')
+      })
       .catch(error => {
-        if (error.status !== 500 && error.status !== 401) this.newEntryError = error.message
+        if (error.status === 500 || error.status === 401) return
+
+        this.newEntryError = error.message
       })
       .finally(() => {
         $timeout(() => {
@@ -33,34 +97,52 @@ function TimeEntriesCtrl ($timeout, TimeEntriesDataSvc, toastr, timeEntries, use
       })
   }
 
-  this.delete = (id) => {
-    this.dataSvc.delete(id, true)
+  this.update = (id, entry) => {
+    const data = _.pick(entry, ['user_id', 'start_ts', 'end_ts', 'description'])
+
+    this.dataSvc.update(id, data, true)
+      .then(() => {
+        this.editMode[id] = false
+        toastr.success('The entry has been successfully updated!')
+      })
       .catch(error => {
-        if (error.status !== 500 && error.status !== 401) toastr.error(error.message)
+        if (error.status === 500 || error.status === 401) return
+
+        toastr.error('Failed to update the entry. Please check for errors and try again!')
       })
   }
 
-  this.loadMoreData = () => {
-    console.log('load more data')
-    if (this.isLoadingMore) return
+  this.delete = (id) => {
+    this.dataSvc.delete(id, true)
+      .then(() => {
+        toastr.warning('The entry has been successfully deleted!')
+      })
+      .catch(error => {
+        if (error.status === 500 || error.status === 401) return
 
-    this.isLoadingMore = true
-    this.dataSvc.listMore()
-      .finally(() => { this.isLoadingMore = false })
+        toastr.error(error.message)
+      })
   }
 
-  this.uiOnParamsChanged = (newParams) => {
-    console.log('new params: ', newParams)
-  }
+  /************************************************************************************************
+   * Watchers
+   ***********************************************************************************************/
 
-  // this.entries = timeEntries
-  console.log('TimeEntriesCtrl ', timeEntries)
-
-  this.printFn = () => {
-    console.log(this)
-  }
+  $scope.$watchCollection(() => this.dataSvc.data, (newVal) => {
+    this.userMap = _.keyBy(_.map(newVal, 'user'), 'id') // build user map
+  })
 }
 
-TimeEntriesCtrl.$inject = ['$timeout', 'TimeEntriesDataSvc', 'toastr', 'timeEntries', 'user']
+TimeEntriesCtrl.$inject = [
+  '$scope',
+  '$timeout',
+  '$state',
+  '$stateParams',
+  'TimeEntriesDataSvc',
+  'UsersDataSvc',
+  'toastr',
+  'timeEntries',
+  'user'
+]
 
 export default TimeEntriesCtrl

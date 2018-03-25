@@ -1,5 +1,6 @@
 .form-control {
   &.clean-form-control {
+    background: transparent !important;
     box-shadow: none;
     border-bottom-width: 1px;
     border-top-width: 0;

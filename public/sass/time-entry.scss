@@ -1,7 +1,15 @@
+.clickable {
+  cursor: pointer;
+}
+
+.non-clickable {
+  cursor: default;
+}
+
 .time-entry-list {
   padding-bottom: 100px;
 
-  .time-entry-list-day-box{
+  .time-entry-list-day-box {
     padding: 15px;
   }
 
@@ -31,31 +39,92 @@
         min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
+
+        .time-entry-description-user {
+          display: inline-block;
+        }
+      }
+    }
+
+    .time-entry-details {
+      .time-entry-notes {
+        margin-top: 15px;
+        display: flex;
+        flex-flow: column;
+
+        .time-entry-note {
+          flex-grow: 1;
+          position: relative;
+          border-radius: 10px;
+          display: flex;
+          flex-flow: column;
+          margin-bottom: 10px;
+
+          .time-entry-note-text {
+            flex-grow: 1;
+            padding: 12px 15px;
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
+
+          &.new-note {
+            .time-entry-note-text {
+              padding: 5px 15px;
+            }
+          }
+
+          .time-entry-note-action {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          }
+        }
       }
 
       .time-entry-actions {
-        flex-grow: 0;
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-end;
+        margin-top: 25px;
+
+        .time-entry-action-group {
+          flex-grow: 1;
+        }
       }
     }
   }
 }
+@media (min-width: $screen-sm-min) {
+  .time-entry {
+    .time-entry-body {
+      .time-entry-details {
+        .time-entry-notes {
+          align-items: flex-start;
 
-.time-entry-actions {
-  ul.nav {
-    display: flex;
-    flex-flow: row;
-    align-content: center;
-    align-items: center;
-    justify-content: flex-end;
+          .time-entry-note {
+            flex-grow: 0;
+            flex-flow: row;
 
-    li {
-      flex-grow: 0;
+            .time-entry-note-text {
+              line-height: 1.5;
+            }
 
-      .time-entry-action {
-        padding: 5px 5px;
+            .time-entry-note-action {
+              flex-grow: 0;
 
-        &:hover {
-          background-color: transparent !important;
+              .btn {
+                margin-top: 0;
+              }
+            }
+          }
+        }
+
+        .time-entry-actions {
+          .time-entry-action-group {
+            flex-grow: 0;
+          }
         }
       }
     }

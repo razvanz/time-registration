@@ -2,41 +2,54 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
+
         <div class="row">
           <div class="col-xs-12">
             <div class="row">
               <div class="col-xs-12">
                 <div class="new-entry">
                   <h4 class="text-center visible-xs">Book new entry</h4>
-                  <form id="new-entry-form" class="form-inline" name="vm.form" ng-init="vm.resetNewEntry()" ng-submit="vm.create(vm.newEntry)" uib-collapse="!newEntryFormVisible">
+                  <form id="new-entry-form" class="form-inline" name="newEntryForm" ng-init="vm.resetNewEntry()" ng-submit="vm.create(vm.newEntry)" uib-collapse="!newEntryFormVisible">
                     <div class="row">
                       <div class="col-xs-12">
                         <div class="form-group visible-lg-inline visible-md-inline visible-sm-inline">
                           <label class="control-label">Book </label>
                         </div>
-                        <div class="form-group" ng-class="{'has-error': vm.form.duration.$dirty && vm.form.duration.$error.required}">
+                        <div class="form-group" ng-class="{'has-error': newEntryForm.duration.$dirty && newEntryForm.duration.$invalid}">
                           <input type="number" name="duration" class="form-control clean-form-control" id="new-entry-duration" placeholder="eg: 5" required="true" min="0.5" max="24" step="0.5" ng-model="vm.newEntry.end_ts" ng-model-options="{ allowInvalid: true }" tr-model-iso-date tr-model-hours-from="vm.newEntry.start_ts">
-                          <label for="new-entry-duration" class="control-label"> hour(s) </label>
+                          <label for="new-entry-duration" class="control-label"> hours </label>
                         </div>
-                        <div class="form-group" ng-class="{'has-error': vm.form.date.$dirty && vm.form.date.$invalid}">
+                        <div class="form-group" ng-class="{'has-error': newEntryForm.date.$dirty && newEntryForm.date.$invalid}">
                           <label for="new-entry-date" class="control-label"> on </label>
                           <input type="date" name="date" class="form-control clean-form-control" id="new-entry-date" placeholder="eg: {{vm.today | date:'dd-MM-yyyy'}}" required="true" ng-model="vm.newEntry.start_ts" tr-model-iso-date>
                         </div>
-                        <div class="form-group" ng-class="{'has-error': vm.form.description.$dirty && vm.form.description.$invalid}">
-                          <label for="new-entry-description" class="control-label"> for </label>
-                          <input type="text" name="description" class="form-control clean-form-control" id="new-entry-description" placeholder="eg: frontend work" ng-model="vm.newEntry.description">
+                        <div class="form-group" ng-if="vm.user.scope.includes('admin')" ng-class="{'has-error': newEntryForm.userId.$dirty && newEntryForm.userId.$invalid}">
+                          <label for="new-entry-user" class="control-label"> for </label>
+                          <input type="text"
+                                 id="new-entry-user"
+                                 class="form-control clean-form-control"
+                                 name="userId"
+                                 ng-model="vm.newEntry.user"
+                                 placeholder="Search for users"
+                                 uib-typeahead="user as user.name for user in vm.searchUsers($viewValue)"
+                                 typeahead-editable="false"
+                                 typeahead-wait-ms="250"
+                                 typeahead-on-select="vm.newEntry.user_id = vm.newEntry.user.id"
+                                 ng-required="true">
+                        </div>
+                        <div class="form-group visible-sm-inline visible-md-inline visible-lg-inline">
                           <label class="control-label visible-sm-inline visible-md-inline visible-lg-inline">.</label>
                         </div>
-                        <div ng-if="vm.form.$dirty && vm.form.$error.required" class="form-group has-error visible-xs">
-                          <span id="new-entry-error-help-xs" class="help-block">Please fill in all the required fields.</span>
+                        <div ng-if="(newEntryForm.$dirty && newEntryForm.$invalid) || vm.newEntryError" class="form-group has-error visible-xs">
+                          <span id="new-entry-error-help-xs" class="help-block">{{newEntryError ? vm.newEntryError : 'Please fill in all the required fields with correct values.'}}</span>
                         </div>
-                        <button type="submit" class="btn btn-success col-md-1 col-sm-2 col-xs-12 pull-right" ng-disabled="vm.form.$error.required">
+                        <button type="submit" class="btn btn-success col-md-1 col-sm-2 col-xs-12 pull-right" ng-disabled="newEntryForm.$invalid">
                           <i class="fa fa-check"></i>
                         </button>
                       </div>
                     </div>
-                    <div ng-if="vm.form.$dirty && vm.form.$error.required" class="form-group has-error visible-sm visible-md visible-lg">
-                      <span id="new-entry-error-help-lg" class="help-block">Please fill in all the required fields.</span>
+                    <div ng-if="(newEntryForm.$dirty && newEntryForm.$invalid) || vm.newEntryError" class="form-group has-error visible-sm visible-md visible-lg">
+                      <span id="new-entry-error-help-lg" class="help-block">{{vm.newEntryError ? vm.newEntryError : 'Please fill in all the required fields with correct values.'}}</span>
                     </div>
                   </form>
                   <button type="button" class="btn btn-default col-xs-12 visible-xs" ng-click="newEntryFormVisible = !newEntryFormVisible">
@@ -55,20 +68,27 @@
               <div class="col-xs-12">
                 <h4 class="text-center visible-xs">Filter between</h4>
                 <div class="time-entries-filters">
-                  <form id="filters-form" class="form-inline" name="vm.filtersForm" uib-collapse="!filtersFormVisible">
+                  <form id="filters-form" class="form-inline" name="filterForm" ng-submit="vm.applyFilters(vm.filters)" uib-collapse="!filtersFormVisible">
                     <div class="row">
                       <div class="col-xs-12">
                         <div class="form-group visible-lg-inline visible-md-inline visible-sm-inline">
-                          <label class="control-label">Filter between </label>
+                          <label class="control-label">Filter between: </label>
                         </div>
-                        <div class="form-group" ng-class="{'has-error': vm.filtersForm.from.$dirty && vm.filtersForm.from.$error}">
-                          <input type="date" name="from" class="form-control clean-form-control" id="filters-from" required="true" ng-model="vm.filters.from" ng-model-options="{ updateOn: 'blur', debounce: 1000 }" tr-model-iso-date>
+                        <div class="form-group" ng-class="{'has-error': filterForm.from.$dirty && filterForm.from.$invalid}">
+                          <input type="date" name="from" class="form-control clean-form-control" id="filters-from" ng-model="vm.filters.from" tr-model-iso-date>
                         </div>
                         <div class="form-group text-center">
                           <label class="control-label"> - </label>
                         </div>
-                        <div class="form-group" ng-class="{'has-error': vm.filtersForm.from.$dirty && vm.filtersForm.from.$error}">
-                          <input type="date" name="to" class="form-control clean-form-control" id="filters-to" required="true" ng-model="vm.filters.to" ng-model-options="{ updateOn: 'blur', debounce: 1000 }" tr-model-iso-date>
+                        <div class="form-group" ng-class="{'has-error': filterForm.to.$dirty && filterForm.to.$invalid}">
+                          <input type="date" name="to" class="form-control clean-form-control" id="filters-to" ng-model="vm.filters.to" tr-model-iso-date>
+                        </div>
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="col-xs-12">
+                              <button type="submit" class="btn btn-success form-control col-xs-12">Go!</button>
+                            </div>
+                          </div>
                         </div>
                         <button type="button" class="btn btn-default col-md-1 col-sm-2 col-xs-12 pull-right"><i class="fa fa-file"></i> Export</button>
                       </div>
@@ -89,60 +109,121 @@
             <div class="time-entry-list">
               <div class="row" ng-repeat="(day, entries) in (vm.dataSvc.data | orderBy:'start_ts':true | groupByDay:'start_ts')">
                 <div class="col-xs-12">
-                  <h5 ng-click="vm.loadMoreData()"> {{ day | date:'yyyy-MM-dd' }}</h5>
+                  <h5> {{ day | date:'yyyy-MM-dd' }}</h5>
                   <div class="well time-entry-list-day-box">
-                    <div class="time-entry"
-                         ng-click="entryDetailsVisible=!entryDetailsVisible"
+
+                    <div class="time-entry clickable"
+                         ng-init="editable=vm.clone(entry); vm.editMode[entry.id]=false; entryDetailsVisible=false;"
+                         ng-click="entryDetailsVisible = !entryDetailsVisible"
                          ng-repeat="entry in entries | orderBy:'start_ts':true"
-                         ng-class="{ 'bg-success': !entry.user.preferred_hours || (entry.end_ts | duration:entry.start_ts:'hours') >= entry.user.preferred_hours, 'bg-danger': (entry.end_ts | duration:entry.start_ts:'hours') < entry.user.preferred_hours }">
+                         ng-class="{ 'bg-success': !vm.userMap[entry.user_id].preferred_hours || (entry.end_ts | duration:entry.start_ts:'hours') >= vm.userMap[entry.user_id].preferred_hours, 'bg-danger': (entry.end_ts | duration:entry.start_ts:'hours') < vm.userMap[entry.user_id].preferred_hours }">
+
                       <div class="row">
                         <div class="col-xs-12">
-                          <div class="time-entry-body">
+                          <form id="entry-form-{{$index + 1}}" class="form-inline" name="entryForms[{{$index + 1}}]" ng-submit="vm.editMode[entry.id] && vm.update(entry.id, editable)">
+                            <div class="time-entry-body">
 
-                            <div class="time-entry-summary" ng-init="editMode=false">
-                              <div class="time-entry-description">
-                                <form id="entry-form-{{$index + 1}}" class="form-inline" name="entryForms[{{$index + 1}}]">
-                                  <div>
-                                    <span ng-if="vm.user.scope.includes('admin')">
-                                      <strong>{{entry.user.name}}</strong>
-                                      <span> - </span>
-                                    </span>
-                                      <!-- <div ng-if="editMode" class="form-group">
-                                        <input type="text" class="form-control" name="user_id" ng-model="entry.user_id" placeholder="Search for users" uib-typeahead="user.id as user.name for users in searchUsers($viewValue)">
-                                      </div> -->
-                                    <span>
+                              <div class="time-entry-summary">
+                                <div class="time-entry-description">
+                                  <div class="time-entry-description-user" ng-if="vm.user.scope.includes('admin')">
+                                    <div ng-if="!vm.editMode[entry.id]" class="form-group" ng-class="{'has-error': entryForms[$index + 1].userId.$dirty && entryForms[$index + 1].userId.$invalid}">
+                                      <span class="form-control-static">
+                                        <strong>{{vm.userMap[entry.user_id].name}}</strong>
+                                      </span>
+                                    </div>
+                                    <div class="form-group non-clickable" ng-if="vm.editMode[entry.id]" ng-click="$event.stopPropagation();">
+                                      <input type="text"
+                                             class="form-control clean-form-control"
+                                             name="userId"
+                                             ng-model="editable.user"
+                                             placeholder="Search for users"
+                                             uib-typeahead="user as user.name for user in vm.searchUsers($viewValue)"
+                                             typeahead-editable="false"
+                                             typeahead-wait-ms="250"
+                                             typeahead-on-select="editable.user_id=editable.user.id"
+                                             ng-required="true">
+                                    </div>
+                                    <div class="form-group visible-sm-inline visible-md-inline visible-lg-inline">
+                                      <span class="form-control-static"> - </span>
+                                    </div>
+                                  </div>
+                                  <div ng-if="!vm.editMode[entry.id]" class="form-group">
+                                    <span class="form-control-static">
                                       <strong>{{(entry.end_ts | duration:entry.start_ts:'hours')}}</strong>
                                       <span> hours </span>
-                                      <!-- <span> for "{{entry.description}}"</span> -->
                                     </span>
                                   </div>
-                                </form>
+                                  <div ng-if="vm.editMode[entry.id]" class="form-group non-clickable" ng-click="$event.stopPropagation();" ng-class="{'has-error': entryForms[$index + 1].duration.$dirty && entryForms[$index + 1].duration.$invalid }">
+                                    <input type="number"
+                                           name="duration"
+                                           class="form-control clean-form-control"
+                                           id="time-entry-{{$index}}-duration"
+                                           placeholder="eg: {{editable.user.preferred_hours}}"
+                                           required="true"
+                                           min="0.5"
+                                           max="24"
+                                           step="0.5"
+                                           ng-model="editable.end_ts"
+                                           ng-model-options="{ allowInvalid: true }"
+                                           tr-model-iso-date
+                                           tr-model-hours-from="editable.start_ts">
+                                    <label for="time-entry-{{$index}}-duration" class="control-label"> hours </label>
+                                  </div>
+                                </div>
                               </div>
 
-                              <div class="time-entry-actions">
-                                <ul class="nav">
-                                  <li>
-                                    <a href class="time-entry-action" ng-click="$event.stopPropagation(); !editMode ? (editMode = !editMode) : vm.updateEntry(entry)">
-                                      <i class="fa" ng-class="{'fa-edit': !editMode, 'fa-check text-success': editMode}"></i>
-                                    </a>
-                                  </li>
-                                  <li>
-                                    <a href class="time-entry-action text-danger" ng-click="$event.stopPropagation(); !editMode ? vm.dataSvc.delete(entry.id, true) :  (editMode = !editMode)">
-                                      <i class="fa" ng-class="{'fa-trash': !editMode, 'fa-times': editMode}"></i>
-                                    </a>
-                                  </li>
-                                </ul>
+                              <div class="time-entry-details" uib-collapse="!entryDetailsVisible">
+
+                                <div class="time-entry-notes">
+                                  <div ng-if="!vm.editMode[entry.id] && !entry.description.length" class="col-xs-12 text-center">
+                                    There are no notes for this entry
+                                  </div>
+                                  <div class="time-entry-note non-clickable bg-info" ng-repeat="note in (vm.editMode[entry.id] ? editable.description : entry.description)" ng-click="$event.stopPropagation();">
+                                    <div class="time-entry-note-text">
+                                      <span>{{note}}</span>
+                                    </div>
+
+                                    <div class="time-entry-note-action">
+                                      <button type="button" class="btn btn-link btn-sm col-xs-12 text-center" ng-if="vm.editMode[entry.id]" ng-click="$event.stopPropagation(); editable.description.splice($index, 1)">
+                                        <i class="fa fa-trash text-danger"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div ng-if="vm.editMode[entry.id]" class="time-entry-note new-note non-clickable bg-info" ng-click="$event.stopPropagation();">
+                                    <div class="time-entry-note-text">
+                                      <div class="form-group">
+                                        <input type="text" class="form-control clean-form-control" id="time-entry-note-{{$index}}-text-new" placeholder="Add a note..." ng-model="newDescription">
+                                      </div>
+                                    </div>
+
+                                    <div class="time-entry-note-action">
+                                      <button type="button" class="btn btn-link btn-sm col-xs-12 text-center" ng-click="(newDescription && editable.description.push(newDescription)); newDescription=''" ng-disabled="!newDescription">
+                                        <i class="fa fa-plus text-success"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div class="time-entry-actions btn-toolbar text-right">
+                                  <div class="btn-group time-entry-action-group" role="group">
+                                    <button type="button" class="btn col-xs-12 btn-default"
+                                            ng-click="$event.stopPropagation(); vm.editMode[entry.id] = !vm.editMode[entry.id]; editable = vm.clone(entry)">
+                                      <i class="fa" ng-class="{'fa-edit': !vm.editMode[entry.id], 'fa-times': vm.editMode[entry.id]}"></i>
+                                    </button>
+                                  </div>
+                                  <div class="btn-group time-entry-action-group" role="group">
+                                    <button type="button" class="btn col-xs-12" ng-class="{'btn-danger': !vm.editMode[entry.id], 'btn-success': vm.editMode[entry.id]}"
+                                            ng-click="$event.stopPropagation(); vm.editMode[entry.id] ? vm.update(entry.id, editable) : vm.dataSvc.delete(entry.id, true)"
+                                            ng-disabled="vm.editMode[entry.id] && entryForms[$index + 1].$invalid">
+                                      <i class="fa" ng-class="{'fa-trash': !vm.editMode[entry.id], 'fa-check': vm.editMode[entry.id]}"></i>
+                                    </button>
+                                  </div>
+                                </div>
+
                               </div>
-
                             </div>
-
-                            <div class="time-entry-details" uib-collapse="!entryDetailsVisible">
-                              {{entry.description}}
-                              {{entry.description}}
-                              {{entry.description}}
-                            </div>
-
-                          </div>
+                          </form>
                         </div>
                       </div>
                     </div>

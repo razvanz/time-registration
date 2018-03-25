@@ -12,8 +12,8 @@ function factory ($http) {
     list (query, saveState, returnRaw) {
       query = query || { id: '', name: '' }
       query.offset = query.offset || 0
-      // query.size = query.size || 100
-      query.size = query.size || 5
+      query.size = query.size || 100
+
       const params = {
         pagination: {
           offset: query.offset,
@@ -45,8 +45,8 @@ function factory ($http) {
       return $http.get(`/user?${qs.stringify(params)}`)
         .then(res => {
           if (saveState) {
+            this.query = { ...query, total: parseInt(res.headers('x-pagination-total'), 10) }
             this.data = res.data
-            this.query = query
           }
 
           return returnRaw ? res : res.data
