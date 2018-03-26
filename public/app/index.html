@@ -16,21 +16,39 @@
           <li class="dropdown" uib-dropdown keyboard-nav="true">
             <a href="#" class="dropdown-toggle" uib-dropdown-toggle role="button" aria-haspopup="true" aria-expanded="false">{{vm.user.name}} <span class="caret"></span></a>
             <ul class="dropdown-menu" uib-dropdown-menu>
-              <li><a ng-if="vm.user.scope.includes('manager')" ui-sref="index.users">Users</a></li>
-              <li><a ui-sref="index.api">Api keys</a></li>
+              <li ui-sref="index.time_entries" ui-sref-active="active">
+                <a href> Time entries </a>
+              </li>
+              <li ng-if="vm.user.scope.includes('manager')" ui-sref="index.users" ui-sref-active="active">
+                <a href> Users </a>
+              </li>
+              <li ui-sref="index.profile" ui-sref-active="active">
+                <a href> Profile </a>
+              </li>
               <li role="separator" class="divider"></li>
-              <li><a ng-click="vm.logout()">Logout</a></li>
+              <li ng-click="vm.logout()">
+                <a href><i class="fa fa-sign-out"></i> Logout </a>
+              </li>
             </ul>
           </li>
         </ul>
       </div>
 
       <div class="collapse navbar-collapse hidden-lg hidden-md hidden-sm " uib-collapse="!xsMenuExpanded">
-        <ul class="nav navbar-nav navbar-right">
-          <li><a ng-if="vm.user.scope.includes('manager')" ui-sref="index.users">Users</a></li>
-          <li><a ui-sref="index.api">Api keys</a></li>
+        <ul class="nav navbar-nav navbar-right" ng-click="xsMenuExpanded=!xsMenuExpanded">
+          <li ui-sref="index.time_entries" ui-sref-active="active">
+            <a href> Time entries </a>
+          </li>
+          <li ng-if="vm.user.scope.includes('manager')" ui-sref="index.users" ui-sref-active="active">
+            <a href> Users </a>
+          </li>
+          <li ui-sref="index.profile" ui-sref-active="active">
+            <a href> Profile </a>
+          </li>
           <li role="separator" class="divider"></li>
-          <li><a ng-click="vm.logout()">Logout</a></li>
+          <li ng-click="vm.logout()">
+            <a href><i class="fa fa-sign-out"></i> Logout </a>
+          </li>
         </ul>
       </div>
     </nav>

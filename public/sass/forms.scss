@@ -10,24 +10,24 @@
   }
 }
 
-#new-entry-form, #filters-form {
+#form-new, #filters-form {
   margin-top: 10px !important;
   margin-bottom: 10px !important;
 }
 
 @media (min-width: $screen-sm-min) {
-  #new-entry-form {
+  #form-new {
     margin-top: 25px;
     margin-bottom: 25px;
   }
 
-  #new-entry-form, #filters-form {
+  #form-new, #filters-form {
+    .control-label {
+      font-size: 18px;
+    }
+
     &.collapse {
       display: block !important;
     }
-  }
-
-  .control-label {
-    font-size: 18px;
   }
 }

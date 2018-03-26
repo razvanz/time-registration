@@ -2,6 +2,7 @@ import _ from 'lodash'
 import { timeEntryDB } from '../services/db'
 import * as validator from '../services/validator'
 import {
+  applyDefaultValues,
   applyFilterQuery,
   applyPaginationQuery,
   applySortQuery,
@@ -84,7 +85,6 @@ export default class TimeEntryController {
   @applyPaginationQuery
   @applySortQuery(TIME_ENTRY_SORT_CONFIG)
   static async list (req, res) {
-    console.log(req.queryBuilder.toString())
     const timeEntries = await req.queryBuilder
 
     // return new Promise((resolve) => {
@@ -103,6 +103,7 @@ export default class TimeEntryController {
   }
 
   @asyncMiddlewareAutoNext
+  @applyDefaultValues(TIME_ENTRY_SCHEMA)
   @validate(TIME_ENTRY_SCHEMA)
   @limitProxyWriteToAdmin
   @assignId

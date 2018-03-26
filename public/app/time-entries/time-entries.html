@@ -2,14 +2,19 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
+        <h3 class="text-center view-title">Time entries</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
 
         <div class="row">
           <div class="col-xs-12">
             <div class="row">
               <div class="col-xs-12">
                 <div class="new-entry">
-                  <h4 class="text-center visible-xs">Book new entry</h4>
-                  <form id="new-entry-form" class="form-inline" name="newEntryForm" ng-init="vm.resetNewEntry()" ng-submit="vm.create(vm.newEntry)" uib-collapse="!newEntryFormVisible">
+                  <h4 class="visible-xs">Book new entry</h4>
+                  <form id="form-new" class="form-inline" name="newEntryForm" ng-init="vm.resetNewEntry()" ng-submit="vm.create(vm.newEntry)" uib-collapse="!newEntryFormVisible">
                     <div class="row">
                       <div class="col-xs-12">
                         <div class="form-group visible-lg-inline visible-md-inline visible-sm-inline">
@@ -41,7 +46,7 @@
                           <label class="control-label visible-sm-inline visible-md-inline visible-lg-inline">.</label>
                         </div>
                         <div ng-if="(newEntryForm.$dirty && newEntryForm.$invalid) || vm.newEntryError" class="form-group has-error visible-xs">
-                          <span id="new-entry-error-help-xs" class="help-block">{{newEntryError ? vm.newEntryError : 'Please fill in all the required fields with correct values.'}}</span>
+                          <span class="help-block">{{newEntryError ? vm.newEntryError : 'Please fill in all the required fields with correct values.'}}</span>
                         </div>
                         <button type="submit" class="btn btn-success col-md-1 col-sm-2 col-xs-12 pull-right" ng-disabled="newEntryForm.$invalid">
                           <i class="fa fa-check"></i>
@@ -49,7 +54,7 @@
                       </div>
                     </div>
                     <div ng-if="(newEntryForm.$dirty && newEntryForm.$invalid) || vm.newEntryError" class="form-group has-error visible-sm visible-md visible-lg">
-                      <span id="new-entry-error-help-lg" class="help-block">{{vm.newEntryError ? vm.newEntryError : 'Please fill in all the required fields with correct values.'}}</span>
+                      <span class="help-block">{{vm.newEntryError ? vm.newEntryError : 'Please fill in all the required fields with correct values.'}}</span>
                     </div>
                   </form>
                   <button type="button" class="btn btn-default col-xs-12 visible-xs" ng-click="newEntryFormVisible = !newEntryFormVisible">
@@ -66,7 +71,7 @@
           <div class="col-xs-12">
             <div class="row">
               <div class="col-xs-12">
-                <h4 class="text-center visible-xs">Filter between</h4>
+                <h4 class="visible-xs">Filter between</h4>
                 <div class="time-entries-filters">
                   <form id="filters-form" class="form-inline" name="filterForm" ng-submit="vm.applyFilters(vm.filters)" uib-collapse="!filtersFormVisible">
                     <div class="row">
@@ -113,7 +118,7 @@
                   <div class="well time-entry-list-day-box">
 
                     <div class="time-entry clickable"
-                         ng-init="editable=vm.clone(entry); vm.editMode[entry.id]=false; entryDetailsVisible=false;"
+                         ng-init="editable=vm.clone(entry); vm.editMode[entry.id]=false;"
                          ng-click="entryDetailsVisible = !entryDetailsVisible"
                          ng-repeat="entry in entries | orderBy:'start_ts':true"
                          ng-class="{ 'bg-success': !vm.userMap[entry.user_id].preferred_hours || (entry.end_ts | duration:entry.start_ts:'hours') >= vm.userMap[entry.user_id].preferred_hours, 'bg-danger': (entry.end_ts | duration:entry.start_ts:'hours') < vm.userMap[entry.user_id].preferred_hours }">
@@ -126,12 +131,12 @@
                               <div class="time-entry-summary">
                                 <div class="time-entry-description">
                                   <div class="time-entry-description-user" ng-if="vm.user.scope.includes('admin')">
-                                    <div ng-if="!vm.editMode[entry.id]" class="form-group" ng-class="{'has-error': entryForms[$index + 1].userId.$dirty && entryForms[$index + 1].userId.$invalid}">
+                                    <div ng-if="!vm.editMode[entry.id]" class="form-group">
                                       <span class="form-control-static">
                                         <strong>{{vm.userMap[entry.user_id].name}}</strong>
                                       </span>
                                     </div>
-                                    <div class="form-group non-clickable" ng-if="vm.editMode[entry.id]" ng-click="$event.stopPropagation();">
+                                    <div class="form-group non-clickable" ng-if="vm.editMode[entry.id]" ng-click="$event.stopPropagation();" class="form-group" ng-class="{'has-error': entryForms[$index + 1].userId.$dirty && entryForms[$index + 1].userId.$invalid}">
                                       <input type="text"
                                              class="form-control clean-form-control"
                                              name="userId"
@@ -205,16 +210,16 @@
                                   </div>
                                 </div>
 
-                                <div class="time-entry-actions btn-toolbar text-right">
+                                <div class="time-entry-actions btn-toolbar text-right non-clickable" ng-click="$event.stopPropagation();">
                                   <div class="btn-group time-entry-action-group" role="group">
                                     <button type="button" class="btn col-xs-12 btn-default"
-                                            ng-click="$event.stopPropagation(); vm.editMode[entry.id] = !vm.editMode[entry.id]; editable = vm.clone(entry)">
+                                            ng-click="vm.editMode[entry.id] = !vm.editMode[entry.id]; editable = vm.clone(entry)">
                                       <i class="fa" ng-class="{'fa-edit': !vm.editMode[entry.id], 'fa-times': vm.editMode[entry.id]}"></i>
                                     </button>
                                   </div>
                                   <div class="btn-group time-entry-action-group" role="group">
                                     <button type="button" class="btn col-xs-12" ng-class="{'btn-danger': !vm.editMode[entry.id], 'btn-success': vm.editMode[entry.id]}"
-                                            ng-click="$event.stopPropagation(); vm.editMode[entry.id] ? vm.update(entry.id, editable) : vm.dataSvc.delete(entry.id, true)"
+                                            ng-click="vm.editMode[entry.id] ? vm.update(entry.id, editable) : vm.dataSvc.delete(entry.id, true)"
                                             ng-disabled="vm.editMode[entry.id] && entryForms[$index + 1].$invalid">
                                       <i class="fa" ng-class="{'fa-trash': !vm.editMode[entry.id], 'fa-check': vm.editMode[entry.id]}"></i>
                                     </button>

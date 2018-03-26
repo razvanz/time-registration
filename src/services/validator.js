@@ -50,7 +50,7 @@ export function isNumber (value, message) {
 }
 
 export function isInteger (value, message) {
-  assert(!isNaN(value) && (value % 1 === 0), message)
+  assert(!isNaN(parseInt(value, 10)) && (value % 1 === 0), message)
 }
 
 export function isString (value, message) {
@@ -71,7 +71,11 @@ export function isEmail (value, message) {
 
 export function isPassword (value) {
   const { score, feedback: { warning, suggestions } } = zxcvbn(value)
-  const message = `${warning}\n${suggestions.join('\n')}`
+  const message = `Password is too easy to guess.\n${
+    (warning || '').trim()
+  }\n${
+    suggestions.join('\n').trim()
+  }`
 
   assert(score > 1, message)
 }

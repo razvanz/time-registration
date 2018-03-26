@@ -1,6 +1,8 @@
 import angular from 'angular'
 import routes from './users.routes'
+import modelJsonTransform from './directives/model-json-transform'
 import UsersDataSvc from './users.data.svc'
+import UsersCtrl from './users.ctrl'
 
 require('angular-animate')
 require('angular-touch')
@@ -21,4 +23,6 @@ export default angular
     'tr.auth'
   ])
   .config(routes)
+  .directive('trModelJsonTransform', modelJsonTransform)
   .service('UsersDataSvc', UsersDataSvc)
+  .controller('UsersCtrl', UsersCtrl)

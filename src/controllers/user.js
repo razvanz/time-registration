@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import { userDB } from '../services/db'
 import {
+  applyDefaultValues,
   applyFilterQuery,
   applyPaginationQuery,
   applySortQuery,
@@ -37,6 +38,7 @@ export const USER_SCHEMA = {
   },
   preferred_hours: {
     type: 'integer',
+    default: 0,
     required: false,
     validate: (val) => val >= 0 && val <= 24
   },
@@ -60,6 +62,10 @@ export const USER_FILTER_CONFIG = {
 }
 export const USER_SORT_CONFIG = {
   name: {
+    type: 'string',
+    values: ['asc', 'desc']
+  },
+  created_at: {
     type: 'string',
     values: ['asc', 'desc']
   }
@@ -99,6 +105,7 @@ export default class UserController {
   }
 
   @asyncMiddlewareAutoNext
+  @applyDefaultValues(USER_SCHEMA)
   @validate(USER_SCHEMA)
   @limitAuthzWrite
   @assignId
@@ -147,7 +154,7 @@ export function limitProxyReadToManager (target, key, descriptor) {
     const { user, queryBuilder } = req
     const userScope = `${user.scope}`.split(/\s/)
 
-    if (!userScope.includes('admin') || !userScope.includes('manager')) {
+    if (!userScope.includes('manager') && !userScope.includes('admin')) {
       // limit non-admin users only their entries
       queryBuilder.where('id', req.user.id)
     }

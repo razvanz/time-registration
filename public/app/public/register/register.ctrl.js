@@ -5,7 +5,7 @@ function RegisterCtrl ($state, DEFAULT_STATE, $http, OAuth2) {
   this.register = () => {
     const { user } = this
 
-    $http.post('/user', user)
+    $http.post('/register', user)
       .then(() => OAuth2.authenticate({ username: user.email, password: user.password }))
       .then(() => {
         $state.go(DEFAULT_STATE)

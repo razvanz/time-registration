@@ -7,13 +7,16 @@ import UtilsController from './controllers/utils'
 
 const router = new Router()
 
-// Obtain an OAuth2 token
+// OAuth2 token
 router.route('/oauth2/token').post(AuthController.token)
+
+// Register
+router.route('/register').post(UserController.create)
 
 // Ueers
 router.route('/user')
   .get(authenticate('user'), UserController.list)
-  .post(UserController.create)
+  .post(authenticate('manager'), UserController.create)
 
 router.use('/user/:id', authenticate('user'), UserController.load)
 router.route('/user/:id')

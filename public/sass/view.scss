@@ -11,6 +11,10 @@ ui-view {
   padding: 0;
   margin: 0;
   overflow: auto;
+
+  .view-title {
+    margin-bottom: 25px;
+  }
 }
 
 #login.view, #register.view {

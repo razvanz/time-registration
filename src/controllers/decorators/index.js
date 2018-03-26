@@ -1,3 +1,4 @@
+export { default as applyDefaultValues } from './apply-default-values'
 export { default as applyFilterQuery } from './apply-filter-query'
 export { default as applyPaginationQuery } from './apply-pagination-query'
 export { default as applySortQuery } from './apply-sort-query'

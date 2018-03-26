@@ -1,0 +1,128 @@
+.users-list {
+  padding-bottom: 100px;
+
+  .user-box:not(:last-child) {
+    margin-bottom: 10px;
+  }
+}
+
+.user-box {
+  margin: 0;
+  padding: 5px 15px;
+  border-radius: 4px;
+
+  .user-body {
+    display: flex;
+    flex-flow: column;
+
+    .user-summary {
+      display: flex;
+      flex-direction: row;
+      align-content: center;
+      align-items: center;
+      justify-content: space-between;
+
+      .user-description {
+        flex-grow: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        display: flex;
+        flex-flow: column;
+      }
+    }
+
+    .user-property {
+      flex-grow: 1;
+      display: flex;
+      flex-flow: column;
+
+      .user-property-label {
+        flex-grow: 1;
+        padding-right: 15px;
+
+        .control-label {
+          font-weight: 500;
+        }
+      }
+
+      .user-property-input {
+        flex-grow: 1;
+      }
+    }
+
+    .user-details {
+      .user-properties {
+        margin-top: 15px;
+        display: flex;
+        flex-flow: column;
+      }
+
+      .user-actions {
+        display: flex;
+        flex-flow: row;
+        justify-content: flex-end;
+        margin-top: 25px;
+
+        .user-action-group {
+          flex-grow: 1;
+        }
+      }
+    }
+  }
+}
+@media (min-width: $screen-sm-min) {
+  .new-user-form {
+    margin-top: 20px;
+
+    .form-group {
+      .form-control {
+        margin-right: 25px;
+      }
+    }
+  }
+
+  .user-box {
+    .user-body {
+      .user-description {
+        align-items: flex-start;
+
+        .user-property {
+          .user-property-label {
+            display: none;
+          }
+        }
+      }
+
+      .user-property {
+        flex-flow: row;
+        justify-content: flex-start;
+        align-items: center;
+
+        .user-property-label {
+          flex-grow: 1;
+        }
+
+        .user-property-input {
+          flex-grow: 10;
+        }
+      }
+
+      .user-details {
+        .user-properties {
+          margin-top: 15px;
+          display: flex;
+          flex-flow: column;
+          align-items: flex-start;
+        }
+
+        .user-actions {
+          .user-action-group {
+            flex-grow: 0;
+          }
+        }
+      }
+    }
+  }
+}

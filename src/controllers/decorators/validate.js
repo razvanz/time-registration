@@ -25,12 +25,12 @@ export default function validate (schemaConfig) {
 
         if (required) {
           validator.equal(!!body[prop], true, `Missing required property "${prop}"`)
-        } else if (!body[prop]) {
+        } else if (!(prop in body)) {
           return
         }
 
         validator.is(config.type, body[prop],
-          `"${prop}" filter value must be a ${config.type}`)
+          `"${prop}" value must be a ${config.type}`)
 
         if (config.min_length) {
           validator.greaterThan(config.min_length, `${body[prop]}`.length,

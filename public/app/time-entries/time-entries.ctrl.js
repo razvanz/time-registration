@@ -37,10 +37,8 @@ function TimeEntriesCtrl (
   }
 
   this.searchUsers = (str) => {
-    console.log('searchUsers ', str)
     return UsersDataSvc.list({ name: str })
       .then((data) => {
-        console.log('found users: ', data)
         return data
       })
   }
@@ -83,6 +81,7 @@ function TimeEntriesCtrl (
     this.dataSvc.create(data, true)
       .then(() => {
         this.resetNewEntry()
+        $scope.newEntryForm.$setPristine(true)
         toastr.success('The new entry has been successfully booked!')
       })
       .catch(error => {

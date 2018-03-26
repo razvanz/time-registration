@@ -1,0 +1,194 @@
+<div id="users-view" class="view" tr-infinite-scroll="vm.loadMoreData()" tr-infinite-scroll-coeficient="0.95">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h3 class="text-center view-title">Users</h3>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="row" >
+              <div class="col-xs-12">
+                <div ng-show="vm.user.scope.includes('manager')" class="new-user">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <h4>Create user</h4>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <form id="form-new" class="form-inline new-user-form" name="newUserForm" ng-init="vm.resetNew()" ng-submit="vm.create(vm.newUser)" uib-collapse="!newFormVisible">
+                        <div class="row">
+                          <div class="col-xs-12">
+                            <div class="form-group" ng-class="{'has-error': newUserForm.name.$dirty && newUserForm.name.$invalid}">
+                              <!-- <label for="new-user-name" class="control-label">Name: </label> -->
+                              <input id="new-user-name" type="text" name="name" class="form-control clean-form-control" placeholder="Name..." required="true" min-length="3" max-length="128" ng-model="vm.newUser.name">
+                            </div>
+                            <div class="form-group" ng-class="{'has-error': newUserForm.email.$dirty && newUserForm.email.$invalid}">
+                              <!-- <label for="new-user-email" class="control-label">Email: </label> -->
+                              <input id="new-user-email" type="email" name="email" class="form-control clean-form-control" placeholder="Email..." required="true" min-length="5" max-length="256" ng-model="vm.newUser.email">
+                            </div>
+                            <div class="form-group" ng-class="{'has-error': newUserForm.password.$dirty && newUserForm.password.$invalid}">
+                              <!-- <label for="new-user-password" class="control-label">Password: </label> -->
+                              <input id="new-user-password" type="password" name="password" class="form-control clean-form-control" placeholder="Password..." required="true" ng-model="vm.newUser.password">
+                            </div>
+                            <div class="form-group" ng-class="{'has-error': newUserForm.role.$dirty && newUserForm.role.$invalid}">
+                              <!-- <label for="new-user-role" class="control-label">Role: </label> -->
+                              <select id="new-user-role" name="role" class="form-control clean-form-control" ng-model="vm.newUser.scope" required="true" placeholder="Choose role" tr-model-json-transform>
+                                <option value="{{vm.roles.user}}">User</option>
+                                <option value="{{vm.roles.manager}}">Manager</option>
+                                <option ng-if="vm.user.scope.includes('admin')" value="{{vm.roles.admin}}">Admin</option>
+                              </select>
+                            </div>
+                            <div ng-if="(newUserForm.$dirty && newUserForm.$invalid) || vm.newEntryError" class="form-group has-error visible-xs">
+                              <span class="help-block">{{newEntryError ? vm.newEntryError : 'Please fill in all the required fields with correct values.'}}</span>
+                            </div>
+                            <button type="submit" class="btn btn-success col-md-1 col-sm-2 col-xs-12 pull-right" ng-disabled="newUserForm.$invalid">
+                              <i class="fa fa-check"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <div ng-if="(newUserForm.$dirty && newUserForm.$invalid) || vm.newEntryError" class="form-group has-error visible-sm visible-md visible-lg">
+                          <span class="help-block">{{vm.newEntryError ? vm.newEntryError : 'Please fill in all the required fields with correct values.'}}</span>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <button type="button" class="btn btn-default col-xs-12 visible-xs" ng-click="newFormVisible = !newFormVisible">
+                    <i class="fa fa" ng-class="{'fa-angle-double-down': !newFormVisible, 'fa-angle-double-up': newFormVisible}"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <hr/>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+
+            <div class="users-list">
+              <div class="well">
+                <div class="user-box clickable bg-info"
+                     ng-init="editable=vm.clone(user); vm.editMode[user.id]=false;"
+                     ng-click="detailsVisible = !detailsVisible"
+                     ng-repeat="user in vm.dataSvc.data | orderBy:'created_at':true">
+
+
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <form id="user-form-{{$index + 1}}" class="form-inline" name="userForms[{{$index + 1}}]" ng-submit="vm.editMode[user.id] && vm.update(user.id, editable)">
+                          <div class="user-body">
+
+                            <div class="user-summary">
+                              <div class="user-description">
+                                <div class="user-property form-group" ng-class="{'has-error': userForms[$index + 1].name.$dirty && userForms[$index + 1].name.$invalid}">
+                                  <div class="user-property-label" ng-if="vm.editMode[user.id]">
+                                    <label for="user-{{$index}}-name" class="control-label">Name </label>
+                                  </div>
+                                  <div class="user-property-input" ng-if="vm.editMode[user.id]">
+                                    <input id="user-{{$index}}-name" type="text" name="name" class="form-control clean-form-control non-clickable" placeholder="Name..." required="true" min-length="3" max-length="128" ng-model="editable.name" ng-click="$event.stopPropagation();">
+                                  </div>
+                                  <div class="user-property-input" ng-if="!vm.editMode[user.id]">
+                                    <span class="form-control-static"><strong>{{user.name}}</strong></span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="user-details" uib-collapse="!detailsVisible">
+                              <div class="user-properties">
+
+                                <div class="user-property form-group non-clickable" ng-click="$event.stopPropagation();" ng-class="{'has-error': userForms[$index + 1].email.$dirty && userForms[$index + 1].email.$invalid}">
+                                  <div class="user-property-label">
+                                    <label for="user-{{$index}}-email" class="control-label">Email: </label>
+                                  </div>
+                                  <div class="user-property-input" ng-if="vm.editMode[user.id]">
+                                    <input id="user-{{$index}}-email" type="email" name="email" class="form-control clean-form-control" placeholder="Email..." required="true" min-length="5" max-length="256" ng-model="editable.email">
+                                  </div>
+                                  <div class="user-property-input" ng-if="!vm.editMode[user.id]">
+                                    <span class="form-control-static">{{user.email}}</span>
+                                  </div>
+                                </div>
+
+                                <div class="user-property form-group non-clickable" ng-click="$event.stopPropagation();" ng-class="{'has-error': userForms[$index + 1].password.$dirty && userForms[$index + 1].password.$invalid}">
+                                  <div class="user-property-label">
+                                    <label for="user-{{$index}}-password" class="control-label">Password: </label>
+                                  </div>
+                                  <div class="user-property-input" ng-if="vm.editMode[user.id]">
+                                    <input id="user-{{$index}}-password" type="password" name="password" class="form-control clean-form-control" placeholder="Password..." required="true" ng-model="editable.password">
+                                  </div>
+                                  <div class="user-property-input" ng-if="!vm.editMode[user.id]">
+                                    <span class="form-control-static">{{user.password ? '********' : '-'}}</span>
+                                  </div>
+                                </div>
+
+                                <div class="user-property form-group non-clickable" ng-click="$event.stopPropagation();" ng-class="{'has-error': userForms[$index + 1].preferred_hours.$dirty && userForms[$index + 1].preferred_hours.$invalid}">
+                                  <div class="user-property-label">
+                                    <label for="user-{{$index}}-preferred-hours" class="control-label">Preferred hours per day: </label>
+                                  </div>
+                                  <div class="user-property-input" ng-if="vm.editMode[user.id]">
+                                    <input id="user-{{$index}}-preferred-hours" type="number" name="preferred_hours" class="form-control clean-form-control" placeholder="eg: 8" required="false" min="0" max="24" step="1" ng-model="editable.preferred_hours">
+                                  </div>
+                                  <div class="user-property-input" ng-if="!vm.editMode[user.id]">
+                                    <span class="form-control-static">{{user.preferred_hours}} hours</span>
+                                  </div>
+                                </div>
+
+                                <div class="user-property form-group non-clickable" ng-click="$event.stopPropagation();" ng-class="{'has-error': userForms[$index + 1].role.$dirty && userForms[$index + 1].role.$invalid}">
+                                  <div class="user-property-label">
+                                    <label for="user-{{$index}}-role" class="control-label">Role: </label>
+                                  </div>
+                                  <div class="user-property-input" ng-if="vm.editMode[user.id] && vm.user.scope.includes('manager') && ((user.scope.includes('admin') ? vm.user.scope.includes('admin'): true))">
+                                    <select id="user-{{$index}}-role" name="role" class="form-control clean-form-control" ng-model="editable.scope" required="true" placeholder="Choose a role" tr-model-json-transform>
+                                      <option value="{{vm.roles.user}}">User</option>
+                                      <option value="{{vm.roles.manager}}">Manager</option>
+                                      <option ng-if="vm.user.scope.includes('admin')" value="{{vm.roles.admin}}">Admin</option>
+                                    </select>
+                                  </div>
+                                  <div class="user-property-input" ng-if="!vm.editMode[user.id] || !vm.user.scope.includes('manager') || ((user.scope.includes('admin') && !vm.user.scope.includes('admin')))">
+                                    <span class="form-control-static">
+                                      {{ (user.scope.includes('admin') && 'Admin') || (user.scope.includes('manager') && 'Manager') || 'User' }}
+                                    </span>
+                                  </div>
+                                </div>
+
+                              </div>
+
+
+                              <div class="user-actions btn-toolbar text-right non-clickable" ng-click="$event.stopPropagation();">
+                                <div class="btn-group user-action-group" role="group">
+                                  <button type="button" class="btn col-xs-12 btn-default"
+                                          ng-click="vm.editMode[user.id] = !vm.editMode[user.id]; editable = vm.clone(user)">
+                                    <i class="fa" ng-class="{'fa-edit': !vm.editMode[user.id], 'fa-times': vm.editMode[user.id]}"></i>
+                                  </button>
+                                </div>
+                                <div class="btn-group user-action-group" role="group">
+                                  <button type="button" class="btn col-xs-12" ng-class="{'btn-danger': !vm.editMode[user.id], 'btn-success': vm.editMode[user.id]}"
+                                          ng-click="vm.editMode[user.id] ? vm.update(user.id, editable) : vm.dataSvc.delete(user.id, true)"
+                                          ng-disabled="vm.editMode[user.id] && userForms[$index + 1].$invalid">
+                                    <i class="fa" ng-class="{'fa-trash': !vm.editMode[user.id], 'fa-check': vm.editMode[user.id]}"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                 </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
