@@ -16,7 +16,7 @@ import {
   handle404,
   snakeifyJsonResponse
 } from './middleware'
-import registerRoutes from './router'
+import router from './router'
 
 const HOST = process.env.HTTP_HOST || '0.0.0.0'
 const PORT = process.env.HTTP_PORT || 80
@@ -52,7 +52,7 @@ server.all('/health', (req, res) => { res.send('OK') }) // Health check
 server.get('/', (req, res) => res.render('index'))
 
 server.use(snakeifyJsonResponse())
-registerRoutes(server)
+server.use(router)
 
 server.use(handle404())
 server.use(errorLogger())

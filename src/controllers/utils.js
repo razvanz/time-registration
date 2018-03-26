@@ -16,7 +16,15 @@ export default class UtilsController {
     }
 
     if (err.code === '23514') { // check constraint
-      return next(createError('E_HTTP_BAD_REQUEST', err, err.detail))
+      if (err.constraint === 'valid_ts_interval') {
+        return next(createError('E_HTTP_BAD_REQUEST', err,
+          '"start_ts" must be lower than "end_ts"'))
+      } else if (err.constraint === 'day_hours') {
+        return next(createError('E_HTTP_BAD_REQUEST', err,
+          '"preferred_hours" must be greater (or equal) than 0 and lower or equal) than 24'))
+      } else {
+        return next(createError('E_HTTP_BAD_REQUEST', err, err.detail))
+      }
     }
 
     return next(err)
