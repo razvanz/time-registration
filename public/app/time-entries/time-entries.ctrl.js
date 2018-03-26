@@ -1,11 +1,15 @@
 import _ from 'lodash'
 import moment from 'moment'
+import qs from 'qs'
 
 function TimeEntriesCtrl (
+  $location,
   $scope,
   $timeout,
   $state,
   $stateParams,
+  OAuth2,
+  OAuth2Token,
   TimeEntriesDataSvc,
   UsersDataSvc,
   toastr,
@@ -61,6 +65,27 @@ function TimeEntriesCtrl (
     }
 
     $state.go($state.current.name, params)
+  }
+
+  this.export = () => {
+    return OAuth2.refreshToken(_.pick(OAuth2Token.getToken(), 'refresh_token'))
+      .then(() => {
+        const query = this.dataSvc.parseQuery(this.dataSvc.query)
+        const params = {
+          access_token: _.get(OAuth2Token.getToken(), 'access_token'),
+          sort: query.sort,
+          filter: query.filter,
+          tz: moment().utcOffset(),
+          pagination: {
+            offset: 0,
+            size: this.dataSvc.query.total || 100
+          }
+        }
+
+        const hostname = `${$location.protocol()}://${$location.host()}:${$location.port()}`
+        const url = `${hostname}/time-entry?${qs.stringify(params)}`
+        window.open(url, '_blank').focus()
+      })
   }
 
   /************************************************************************************************
@@ -133,10 +158,13 @@ function TimeEntriesCtrl (
 }
 
 TimeEntriesCtrl.$inject = [
+  '$location',
   '$scope',
   '$timeout',
   '$state',
   '$stateParams',
+  'OAuth2',
+  'OAuth2Token',
   'TimeEntriesDataSvc',
   'UsersDataSvc',
   'toastr',

@@ -9,7 +9,7 @@ function factory ($q, $http) {
       this.query = null
     }
 
-    list (query, saveState, returnRaw) {
+    parseQuery (query) {
       query = query || { id: '', name: '' }
       query.offset = query.offset || 0
       query.size = query.size || 100
@@ -43,7 +43,11 @@ function factory ($q, $http) {
         }
       }
 
-      return $http.get(`/user?${qs.stringify(params)}`)
+      return params
+    }
+
+    list (query, saveState, returnRaw) {
+      return $http.get(`/user?${qs.stringify(this.parseQuery(query))}`)
         .then(res => {
           if (saveState) {
             this.query = { ...query, total: parseInt(res.headers('x-pagination-total'), 10) }

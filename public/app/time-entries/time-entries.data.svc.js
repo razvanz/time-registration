@@ -9,7 +9,7 @@ function factory ($q, $http, UsersDataSvc) {
       this.query = null
     }
 
-    list (query, saveState, returnRaw) {
+    parseQuery (query) {
       query = query || { from: '', to: '' }
       query.offset = query.offset || 0
       query.size = query.size || 100
@@ -44,7 +44,11 @@ function factory ($q, $http, UsersDataSvc) {
         }
       }
 
-      return $http.get(`/time-entry?${qs.stringify(params)}`)
+      return params
+    }
+
+    list (query, saveState, returnRaw) {
+      return $http.get(`/time-entry?${qs.stringify(this.parseQuery(query))}`)
         .then(populateUser)
         .then(res => {
           if (saveState) {

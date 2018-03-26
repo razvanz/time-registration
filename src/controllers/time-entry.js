@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { timeEntryDB } from '../services/db'
+import moment from 'moment'
+import { timeEntryDB, userDB } from '../services/db'
 import * as validator from '../services/validator'
 import {
   applyDefaultValues,
@@ -87,14 +88,31 @@ export default class TimeEntryController {
   static async list (req, res) {
     const timeEntries = await req.queryBuilder
 
-    // return new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     res.json(timeEntries)
-    //     resolve()
-    //   }, 2000)
-    // })
-    // TODO Respond with timeEntries based on content type (export)
-    res.json(timeEntries)
+    if (`${req.get('Accept')}`.includes('application/json')) {
+      res.json(timeEntries)
+      return
+    }
+
+    // Respond with HTML for export
+    const userIds = _.uniq(_.map(timeEntries, 'user_id'))
+    const userMap = _.keyBy(await userDB.find(['id', 'in', userIds]).select(['id', 'name']), 'id')
+
+    await new Promise((resolve, reject) => {
+      res.render('time-entries-export', {
+        timeEntries: _.map(timeEntries, te => ({
+          ...te,
+          user: userMap[te.user_id],
+          start_ts: moment(te.start_ts).add(req.query.tz || 0, 'minutes').toISOString(),
+          duration: Math.round(moment(te.end_ts)
+            .diff(moment(te.start_ts), 'hours', true) * 10 * 2) / 10 / 2
+        }))
+      }, (err, html) => {
+        if (err) return reject(err)
+
+        res.send(html)
+        resolve()
+      })
+    })
   }
 
   @asyncMiddlewareAutoNext
