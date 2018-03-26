@@ -127,8 +127,5 @@ GitHub.sublime-settings
 
 build
 
-# Environment configuration
-.env*
-
 # Bundled templates
 public/app/templates.js

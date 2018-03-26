@@ -1,0 +1,661 @@
+{
+	"variables": [],
+	"info": {
+		"name": "TimeRegistration",
+		"_postman_id": "12fbc553-da5d-22d0-dd3e-a5c182ca1ef2",
+		"description": "API's for the time registration backend.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"description": "",
+			"item": [
+				{
+					"name": "token (password)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"",
+									"// postman.setEnvironmentVariable(\"ACCESS_TOKEN\", data.access_token);",
+									"// postman.setEnvironmentVariable(\"REFRESH_TOKEN\", data.refresh_token);",
+									"",
+									"postman.setGlobalVariable(\"ACCESS_TOKEN\", data.access_token);",
+									"postman.setGlobalVariable(\"REFRESH_TOKEN\", data.refresh_token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:3000/oauth2/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic Q2VYWGM2aVpPWEhZSXAyeW1GY1dMWkQzdUFkMXY2aHZCYXpOOk85MHEzQThTU0lRM1pOSXRneEk0VDkweFZKcDhOUkVtOEVOcEFjek95REhoamtoOExnNGpoQUkyeXloOTFtdE0=",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "username",
+									"value": "su@email.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "q1w2Q!W@",
+									"type": "text"
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				},
+				{
+					"name": "token (client-credentials)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"",
+									"// postman.setEnvironmentVariable(\"ACCESS_TOKEN\", data.access_token);",
+									"// postman.setEnvironmentVariable(\"REFRESH_TOKEN\", data.refresh_token);",
+									"",
+									"postman.setGlobalVariable(\"ACCESS_TOKEN\", data.access_token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:3000/oauth2/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic am1GOE9QbXl2SXEvb0Q2dGEzY0FFZkkwcnNramdGNlZtMCtvOmdVSWxIUHQrb0kvRUpKTFk3Ulp4ekFCQ3JwVTdNaE94N2FKNmVRTHNadTJSOCtFdjVrTFRtNjVoT0RZdXNUTzY=",
+								"description": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "client_credentials",
+									"type": "text"
+								},
+								{
+									"key": "client_id",
+									"value": "CeXXc6iZOXHYIp2ymFcWLZD3uAd1v6hvBazM",
+									"type": "text"
+								},
+								{
+									"key": "client_secret",
+									"value": "O90q3A8SSIQ3ZNItgxI4T90xVJp8NREm8ENpAczOyDHhjkh8Lg4jhAI2yyh91mtN",
+									"type": "text"
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "token (refresh-token)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"",
+									"// postman.setEnvironmentVariable(\"ACCESS_TOKEN\", data.access_token);",
+									"// postman.setEnvironmentVariable(\"REFRESH_TOKEN\", data.refresh_token);",
+									"",
+									"postman.setGlobalVariable(\"ACCESS_TOKEN\", data.access_token);",
+									"postman.setGlobalVariable(\"REFRESH_TOKEN\", data.refresh_token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:3000/oauth2/token",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic Q2VYWGM2aVpPWEhZSXAyeW1GY1dMWkQzdUFkMXY2aHZCYXpOOk85MHEzQThTU0lRM1pOSXRneEk0VDkweFZKcDhOUkVtOEVOcEFjek95REhoamtoOExnNGpoQUkyeXloOTFtdE0=",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "grant_type",
+									"value": "refresh_token",
+									"type": "text"
+								},
+								{
+									"key": "refresh_token",
+									"value": "{{REFRESH_TOKEN}}",
+									"description": "",
+									"type": "text"
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Time entries",
+			"description": "",
+			"item": [
+				{
+					"name": "time-entry",
+					"request": {
+						"url": "http://localhost:3000/time-entry",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "List time entries"
+					},
+					"response": []
+				},
+				{
+					"name": "time-entry (filtering)",
+					"request": {
+						"url": {
+							"raw": "http://localhost:3000/time-entry?sort[start_ts]=desc&sort[end_ts]=asc&pagination[offset]=0&pagination[size]=10",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"time-entry"
+							],
+							"query": [
+								{
+									"key": "filter[start_ts][<]",
+									"value": "2018-03-17T11:00:00.000Z",
+									"equals": true,
+									"description": "",
+									"disabled": true
+								},
+								{
+									"key": "filter[start_ts][>]",
+									"value": "2018-03-17T00:00:00.000Z",
+									"equals": true,
+									"description": "",
+									"disabled": true
+								},
+								{
+									"key": "sort[start_ts]",
+									"value": "desc",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "sort[end_ts]",
+									"value": "asc",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "pagination[offset]",
+									"value": "0",
+									"equals": true,
+									"description": ""
+								},
+								{
+									"key": "pagination[size]",
+									"value": "10",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "List time entries"
+					},
+					"response": []
+				},
+				{
+					"name": "time-entry",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"",
+									"// postman.setEnvironmentVariable(\"ACCESS_TOKEN\", data.access_token);",
+									"// postman.setEnvironmentVariable(\"REFRESH_TOKEN\", data.refresh_token);",
+									"",
+									"postman.setGlobalVariable(\"LAST_TIME_ENTRY\", data.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:3000/time-entry",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"user_id\": \"1cfbf813-cf7c-4929-9d58-9bbfe9420869\",\n  \"start_ts\": \"2018-03-21T08:00:00.000Z\",\n  \"end_ts\": \"2018-03-21T16:00:00.000Z\",\n  \"description\": [\"Normal work\"]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "time-entry (one)",
+					"request": {
+						"url": {
+							"raw": "http://localhost:3000/time-entry/{{LAST_TIME_ENTRY}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"time-entry",
+								"{{LAST_TIME_ENTRY}}"
+							],
+							"query": [
+								{
+									"key": "filter[start_ts][>]",
+									"value": "2018-03-17T00:00:00.000Z",
+									"equals": true,
+									"description": "",
+									"disabled": true
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "time-entry",
+					"request": {
+						"url": "http://localhost:3000/time-entry/{{LAST_TIME_ENTRY}}",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user_id\": \"5d9b1585-9ac4-4ab5-811a-ff8286149168\",\n    \"start_ts\": \"2018-03-21T08:00:00.000Z\",\n    \"end_ts\": \"2018-03-21T16:00:00.000Z\",\n    \"description\": [\n        \"Normal work\",\n        \"More description\"\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "time-entry",
+					"request": {
+						"url": "http://localhost:3000/time-entry/{{LAST_TIME_ENTRY}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"description": "",
+			"item": [
+				{
+					"name": "user",
+					"request": {
+						"url": "http://localhost:3000/user",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "List time entries"
+					},
+					"response": []
+				},
+				{
+					"name": "user (filtering)",
+					"request": {
+						"url": {
+							"raw": "http://localhost:3000/user?filter[name][LIKE]=razvan%",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"user"
+							],
+							"query": [
+								{
+									"key": "filter[name][LIKE]",
+									"value": "razvan%",
+									"equals": true,
+									"description": ""
+								}
+							],
+							"variable": []
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "List time entries"
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var data = JSON.parse(responseBody);",
+									"",
+									"// postman.setEnvironmentVariable(\"ACCESS_TOKEN\", data.access_token);",
+									"// postman.setEnvironmentVariable(\"REFRESH_TOKEN\", data.refresh_token);",
+									"",
+									"postman.setGlobalVariable(\"LAST_USER\", data.id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "http://localhost:3000/user",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Razvan v1\",\n\t\"email\": \"razvan+v1@email.com\",\n\t\"password\": \"q1w2Q!W@\"\n}"
+						},
+						"description": "List time entries"
+					},
+					"response": []
+				},
+				{
+					"name": "user (one)",
+					"request": {
+						"url": "http://localhost:3000/user/{{LAST_USER}}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Razvan Laurus\",\n\t\"email\": \"razvanlaurus@gmail.com\",\n\t\"password\": \"q1w2Q!W@\"\n}"
+						},
+						"description": "List time entries"
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"url": "http://localhost:3000/user/{{LAST_USER}}",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"1840daea-5c5a-4453-81cc-6cbc893ef6db\",\n    \"name\": \"Razvan v1 updated\",\n    \"email\": \"razvan+v1@gmail.com\",\n    \"preferred_hours\": 4\n}"
+						},
+						"description": "List time entries"
+					},
+					"response": []
+				},
+				{
+					"name": "user",
+					"request": {
+						"url": "http://localhost:3000/user/{{LAST_USER}}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{ACCESS_TOKEN}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "List time entries"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
