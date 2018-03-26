@@ -19,11 +19,8 @@
               <li ui-sref="index.time_entries" ui-sref-active="active">
                 <a href> Time entries </a>
               </li>
-              <li ng-if="vm.user.scope.includes('manager')" ui-sref="index.users" ui-sref-active="active">
+              <li ui-sref="index.users" ui-sref-active="active">
                 <a href> Users </a>
-              </li>
-              <li ui-sref="index.profile" ui-sref-active="active">
-                <a href> Profile </a>
               </li>
               <li role="separator" class="divider"></li>
               <li ng-click="vm.logout()">
@@ -39,11 +36,8 @@
           <li ui-sref="index.time_entries" ui-sref-active="active">
             <a href> Time entries </a>
           </li>
-          <li ng-if="vm.user.scope.includes('manager')" ui-sref="index.users" ui-sref-active="active">
+          <li ui-sref="index.users" ui-sref-active="active">
             <a href> Users </a>
-          </li>
-          <li ui-sref="index.profile" ui-sref-active="active">
-            <a href> Profile </a>
           </li>
           <li role="separator" class="divider"></li>
           <li ng-click="vm.logout()">

@@ -74,7 +74,7 @@
             <div class="users-list">
               <div class="well">
                 <div class="user-box clickable bg-info"
-                     ng-init="editable=vm.clone(user); vm.editMode[user.id]=false;"
+                     ng-init="editable=vm.clone(user); vm.editMode[user.id]=false; (user.id === vm.user.id ? (detailsVisible=true) : true )"
                      ng-click="detailsVisible = !detailsVisible"
                      ng-repeat="user in vm.dataSvc.data | orderBy:'created_at':true">
 
@@ -170,7 +170,7 @@
                                 <div class="btn-group user-action-group" role="group">
                                   <button type="button" class="btn col-xs-12" ng-class="{'btn-danger': !vm.editMode[user.id], 'btn-success': vm.editMode[user.id]}"
                                           ng-click="vm.editMode[user.id] ? vm.update(user.id, editable) : vm.dataSvc.delete(user.id, true)"
-                                          ng-disabled="vm.editMode[user.id] && userForms[$index + 1].$invalid">
+                                          ng-disabled="(vm.editMode[user.id] && userForms[$index + 1].$invalid) || (!vm.editMode[user.id] && vm.user.id === user.id)">
                                     <i class="fa" ng-class="{'fa-trash': !vm.editMode[user.id], 'fa-check': vm.editMode[user.id]}"></i>
                                   </button>
                                 </div>
